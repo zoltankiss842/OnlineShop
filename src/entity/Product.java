@@ -7,6 +7,9 @@ public class Product {
     private double price;
     private int warehouseQuantity;
     private boolean onWishList;
+    private boolean inCart;
+    private int amountInCart;
+    private boolean isShown;
 
     public Product(String productName, String category, double price, int warehouseQuantity) {
         this.productName = productName;
@@ -14,6 +17,9 @@ public class Product {
         this.price = price;
         this.warehouseQuantity = warehouseQuantity;
         this.onWishList = false;
+        this.inCart = false;
+        this.amountInCart = 0;
+        this.isShown = true;
     }
 
     public String getProductName() {
@@ -54,6 +60,30 @@ public class Product {
 
     public void setOnWishList(boolean onWishList) {
         this.onWishList = onWishList;
+    }
+
+    public boolean isInCart() {
+        return inCart;
+    }
+
+    public void setInCart(boolean inCart) {
+        this.inCart = inCart;
+    }
+
+    public int getAmountInCart() {
+        return amountInCart;
+    }
+
+    public void setAmountInCart(int amountInCart) {
+        this.amountInCart = amountInCart;
+    }
+
+    public boolean isShown() {
+        return isShown;
+    }
+
+    public void setShown(boolean shown) {
+        isShown = shown;
     }
 
     @Override

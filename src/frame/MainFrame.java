@@ -1,16 +1,21 @@
 package frame;
 
+import entity.Cart;
+import entity.Product;
 import entity.ProductList;
+import frame.cart.CartTable;
 import frame.products.ProductsPanel;
 import frame.products.SearchPanel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainFrame {
 
-    private final String version = "V1.1";
+    private final String version = "V1.2";
     private final String frameTitle = "Online Shop";
     private final String productsTabTitle = "Termékek";
     private final String productsTabTitleDesc = "Raktárunkban megtalálható termékek";
@@ -27,14 +32,22 @@ public class MainFrame {
 
     private SearchPanel searchPanel;
     private ProductsPanel productsPanel;
+    private CartTable cartTable;
+
+    private ProductList list;
+    private Cart cart;
 
     public MainFrame(){}
 
-    public void init(ProductList list){
+    public void init(ProductList list, Cart cart){
+        this.list = list;
+        this.cart = cart;
+
         createFrame();
         createTabPane();
         createProductsTab(list);
         createCartTab();
+
         window.add(tabPane);
         window.setVisible(true);
     }
@@ -72,8 +85,9 @@ public class MainFrame {
         ImageIcon icon = new ImageIcon(productsIconPath); // Sets icon
 
         initListAndSearchHolder();
-        createSearchPanel(list);
+        createSearchPanel(list, window);
         createProductsPanel(list);
+
 
         tabPane.addTab(productsTabTitle, icon, listAndSearchHolder, productsTabTitleDesc);
     }
@@ -83,9 +97,10 @@ public class MainFrame {
         listAndSearchHolder.setBorder(new LineBorder(Color.RED,4));
     }
 
-    private void createSearchPanel(ProductList list) {
+    private void createSearchPanel(ProductList list, JFrame frame) {
         searchPanel = new SearchPanel();
-        listAndSearchHolder.add(searchPanel.createSearchPanel(list), BorderLayout.PAGE_START);
+        productsPanel = new ProductsPanel();
+        listAndSearchHolder.add(searchPanel.createSearchPanel(list, frame, productsPanel), BorderLayout.PAGE_START);
     }
 
     /**
@@ -93,7 +108,6 @@ public class MainFrame {
      * display as a list
      */
     private void createProductsPanel(ProductList list){
-        productsPanel = new ProductsPanel();
         listAndSearchHolder.add(productsPanel.createProductsPanel(list, tabPane, listAndSearchHolder), BorderLayout.CENTER);
 
     }
@@ -101,6 +115,8 @@ public class MainFrame {
     private void createCartTab() {
         ImageIcon icon = new ImageIcon(cartIconPath); // Sets icon
 
-        tabPane.addTab(cartTabTitle, icon, new JPanel(), cartTabTitleDesc);
+        cartTable = new CartTable(list.getProductList());
+
+        tabPane.addTab(cartTabTitle, icon, cartTable.createCartTable(), cartTabTitleDesc);
     }
 }

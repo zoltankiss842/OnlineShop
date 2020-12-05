@@ -1,12 +1,15 @@
 package frame.products;
 
 import entity.Product;
+import tools.StringManipulation;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -26,17 +29,29 @@ public class ListItem {
     private JLabel productIsOnWishlist;
     private JLabel productAddToCart;
     private JPanel productAmount;
+    private JFormattedTextField format;
+
+    private BufferedImage heartEmpty;
+    private BufferedImage heartFull;
+    private BufferedImage basket;
+
+    private JLabel heartFullLabel;
+    private JLabel heartEmptyLabel;
+
+    private Product product;
 
 
     public ListItem(Product product, JTabbedPane tab){
         item = new JPanel(new GridLayout(1,7));
+        this.product = product;
 
         item.setMinimumSize(new Dimension(0,100));
         item.setMaximumSize(new Dimension(Integer.MAX_VALUE,100));
         item.setPreferredSize(new Dimension(tab.getWidth(), 100));
         item.setBorder(new EmptyBorder(5,50,50,5));
 
-        createLabels(product);
+        readIcons();
+        createLabels(this.product);
 
         item.add(productName);
         item.add(productCategory);
@@ -44,6 +59,19 @@ public class ListItem {
         item.add(productQuantity);
         item.add(productIsOnWishlist);
         item.add(productAmount);
+    }
+
+
+    private void readIcons() {
+
+        try{
+            heartFull = ImageIO.read(new File(fullHeart));
+            heartEmpty = ImageIO.read(new File(emptyHeart));
+            basket = ImageIO.read(new File(basketIcon));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void createLabels(Product product) {
@@ -74,7 +102,6 @@ public class ListItem {
 
     private JPanel setAmountFormatting() {
         productAddToCart = setCartIcon();
-        JFormattedTextField format = null;
         try {
             format = new JFormattedTextField(new MaskFormatter(formatter));
             format.setColumns(4);
@@ -94,16 +121,63 @@ public class ListItem {
     }
 
     private JLabel setCartIcon() {
-        JLabel basket = null;
-        try{
-            BufferedImage pic = ImageIO.read(new File(basketIcon));
-            basket = new JLabel(new ImageIcon(pic));
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        JLabel basketPicture = new JLabel(new ImageIcon(basket));
+        basketPicture.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
 
-        return basket;
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String value = format.getText();
+                Integer amount = null;
+                try{
+                    StringManipulation manipulator = new StringManipulation();
+                    value = manipulator.sanitizeForNumbers(value);
+
+                    if(value == null){
+                        throw new NullPointerException();
+                    }
+
+                    amount = Integer.parseInt(value);
+                }
+                catch (Exception ex){
+                    ex.printStackTrace();
+                }
+
+                if(amount == null){
+                    JOptionPane.showMessageDialog(item,"Invalid amount");
+                }
+                else{
+                    if(product.isInCart()){
+                        product.setAmountInCart(product.getAmountInCart()+amount);
+                    }
+                    else{
+                        product.setInCart(true);
+                        product.setAmountInCart(amount);
+                    }
+                }
+
+                System.out.println("In cart amount: " + product.getAmountInCart());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        return basketPicture;
     }
 
     public JPanel getItem() {
@@ -116,21 +190,51 @@ public class ListItem {
 
     private JLabel setWishlistIcon(boolean onWishlist){
         JLabel heart = null;
-        try{
-            if(onWishlist){
-                BufferedImage pic = ImageIO.read(new File(fullHeart));
-                heart = new JLabel(new ImageIcon(pic));
-            }
-            else{
-                BufferedImage pic = ImageIO.read(new File(emptyHeart));
-                heart = new JLabel(new ImageIcon(pic));
-            }
-
+        if(onWishlist){
+            heart = new JLabel(new ImageIcon(heartFull));
         }
-        catch (Exception e){
-            e.printStackTrace();
+        else{
+            heart = new JLabel(new ImageIcon(heartEmpty));
         }
 
-        return heart;
+        JLabel finalHeart = heart;
+        heart.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(product.isOnWishList()){
+                    finalHeart.setIcon(new ImageIcon(heartEmpty));
+                    product.setOnWishList(false);
+                    System.out.println("Full to empty");
+                }
+                else{
+                    finalHeart.setIcon(new ImageIcon(heartFull));
+                    product.setOnWishList(true);
+                    System.out.println("Empty to full");
+                }
+                item.revalidate();
+                item.repaint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        return finalHeart;
     }
 }

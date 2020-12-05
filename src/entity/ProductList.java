@@ -58,4 +58,13 @@ public class ProductList {
             System.out.println(c);
         }
     }
+
+    public void printIfOnWishList(){
+        for(Product p : productList){
+            if(p.isOnWishList()){
+                System.out.println(p.toString());
+            }
+        }
+    }
+
 }
