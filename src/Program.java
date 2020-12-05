@@ -7,7 +7,6 @@ public class Program {
     ProductList list = new ProductList("resources\\data\\MOCK_DATA.csv");
 
     public void run(){
-
         frame.init(list);
         list.printCategoryList();
         list.printProductList();

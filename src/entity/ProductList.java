@@ -3,6 +3,7 @@ package entity;
 import tools.FileIO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,8 +24,11 @@ public class ProductList {
         for(Product p : productList){
             categories.add(p.getCategory());
         }
+
         categoryList = new ArrayList<>();
         categoryList.addAll(categories);
+
+        Collections.sort(categoryList);
     }
 
     public ArrayList<Product> getProductList() {

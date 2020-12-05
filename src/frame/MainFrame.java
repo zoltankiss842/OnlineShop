@@ -1,38 +1,48 @@
 package frame;
 
-import entity.Product;
 import entity.ProductList;
+import frame.products.ProductsPanel;
+import frame.products.SearchPanel;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
-
-// TODO - Implement search and category options
-// TODO - V1.1 is started
 
 public class MainFrame {
 
-    private final String version = "V1.0";
+    private final String version = "V1.1";
     private final String frameTitle = "Online Shop";
     private final String productsTabTitle = "Termékek";
     private final String productsTabTitleDesc = "Raktárunkban megtalálható termékek";
+    private final String cartTabTitle = "Kosár";
+    private final String cartTabTitleDesc = "Az Ön kosara";
 
     private final String favIconPath = "resources\\images\\favicon.png";
     private final String productsIconPath = "resources\\images\\productsIcon.png";
+    private final String cartIconPath = "resources\\images\\cartIcon.png";
 
     private JFrame window;
-    private JTabbedPane products;
-    private JScrollPane listOfProducts;
-    private Box holder;
+    private JTabbedPane tabPane;
+    private JPanel listAndSearchHolder;
+
+    private SearchPanel searchPanel;
+    private ProductsPanel productsPanel;
 
     public MainFrame(){}
 
     public void init(ProductList list){
-
         createFrame();
-
+        createTabPane();
         createProductsTab(list);
-
+        createCartTab();
+        window.add(tabPane);
         window.setVisible(true);
+    }
+
+    private void createTabPane() {
+        tabPane = new JTabbedPane();
+        tabPane.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
+        tabPane.setTabPlacement(JTabbedPane.TOP);
     }
 
     /**
@@ -59,44 +69,38 @@ public class MainFrame {
      * the available products in the shop
      */
     private void createProductsTab(ProductList list){
-        products = new JTabbedPane();
-        products.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
-        products.setTabPlacement(JTabbedPane.TOP);
-
         ImageIcon icon = new ImageIcon(productsIconPath); // Sets icon
 
-        createProductsHolder(list);
+        initListAndSearchHolder();
+        createSearchPanel(list);
+        createProductsPanel(list);
 
-        createProductsScrollPane();
+        tabPane.addTab(productsTabTitle, icon, listAndSearchHolder, productsTabTitleDesc);
+    }
 
-        products.addTab(productsTabTitle, icon, listOfProducts, productsTabTitleDesc);
+    private void initListAndSearchHolder() {
+        listAndSearchHolder = new JPanel(new BorderLayout());
+        listAndSearchHolder.setBorder(new LineBorder(Color.RED,4));
+    }
 
-        window.add(products);
+    private void createSearchPanel(ProductList list) {
+        searchPanel = new SearchPanel();
+        listAndSearchHolder.add(searchPanel.createSearchPanel(list), BorderLayout.PAGE_START);
     }
 
     /**
      * Creates the panel, which makes the products
      * display as a list
      */
-    private void createProductsHolder(ProductList list){
-        holder = Box.createVerticalBox();
-
-        for(Product p : list.getProductList()){
-            ListItem item = new ListItem(p, this.products);
-            holder.add(item.getItem());
-            holder.add(Box.createVerticalStrut(10));
-        }
-
-        holder.add(Box.createVerticalGlue());
+    private void createProductsPanel(ProductList list){
+        productsPanel = new ProductsPanel();
+        listAndSearchHolder.add(productsPanel.createProductsPanel(list, tabPane, listAndSearchHolder), BorderLayout.CENTER);
 
     }
 
-    /**
-     * Creates a scrollable environment for the list
-     */
-    private void createProductsScrollPane(){
-        listOfProducts = new JScrollPane(holder);
-        listOfProducts.getVerticalScrollBar().setUnitIncrement(16);
-    }
+    private void createCartTab() {
+        ImageIcon icon = new ImageIcon(cartIconPath); // Sets icon
 
+        tabPane.addTab(cartTabTitle, icon, new JPanel(), cartTabTitleDesc);
+    }
 }
