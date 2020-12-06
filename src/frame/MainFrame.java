@@ -9,6 +9,8 @@ import frame.products.SearchPanel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,7 +48,7 @@ public class MainFrame {
         createFrame();
         createTabPane();
         createProductsTab(list);
-        createCartTab();
+        createCartTab(list);
 
         window.add(tabPane);
         window.setVisible(true);
@@ -56,6 +58,18 @@ public class MainFrame {
         tabPane = new JTabbedPane();
         tabPane.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
         tabPane.setTabPlacement(JTabbedPane.TOP);
+
+        tabPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if(e.getSource() instanceof JTabbedPane){
+                    JTabbedPane pane = (JTabbedPane) e.getSource();
+                    if(pane.getSelectedIndex() == 1){
+                        cartTable.updateCartTable(list, window);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -112,11 +126,11 @@ public class MainFrame {
 
     }
 
-    private void createCartTab() {
+    private void createCartTab(ProductList list) {
         ImageIcon icon = new ImageIcon(cartIconPath); // Sets icon
 
-        cartTable = new CartTable(list.getProductList());
+        cartTable = new CartTable();
 
-        tabPane.addTab(cartTabTitle, icon, cartTable.createCartTable(), cartTabTitleDesc);
+        tabPane.addTab(cartTabTitle, icon, cartTable.createCartTable(list, tabPane), cartTabTitleDesc);
     }
 }

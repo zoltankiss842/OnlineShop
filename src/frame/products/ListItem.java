@@ -35,19 +35,16 @@ public class ListItem {
     private BufferedImage heartFull;
     private BufferedImage basket;
 
-    private JLabel heartFullLabel;
-    private JLabel heartEmptyLabel;
-
     private Product product;
 
 
-    public ListItem(Product product, JTabbedPane tab){
+    public ListItem(Product product, JPanel panel){
         item = new JPanel(new GridLayout(1,7));
         this.product = product;
 
         item.setMinimumSize(new Dimension(0,100));
-        item.setMaximumSize(new Dimension(Integer.MAX_VALUE,100));
-        item.setPreferredSize(new Dimension(tab.getWidth(), 100));
+        item.setMaximumSize(new Dimension(5000,100));
+        item.setPreferredSize(new Dimension(panel.getWidth(), 100));
         item.setBorder(new EmptyBorder(5,50,50,5));
 
         readIcons();

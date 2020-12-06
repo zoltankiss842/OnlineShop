@@ -1,45 +1,104 @@
 package frame.cart;
 
 import entity.Cart;
+import entity.CartItem;
 import entity.Product;
+import entity.ProductList;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 
 public class CartTable {
 
-    private String[] header = {"Item", "Price", "Quantity"};
-    private String[][] data;
 
-    private JTable table;
     private JScrollPane scrollPane;
+    private Box holder;
+    private JTabbedPane tab;
 
     private Cart cart;
+    private ProductList productList;
 
-    public CartTable(ArrayList<Product> list){
+    // TODO - implement a better cartTable
+
+    public JScrollPane createCartTable(ProductList list, JTabbedPane tab){
+        this.tab = tab;
+        this.productList = list;
         cart = new Cart();
+        scrollPane = new JScrollPane();
 
-        fillCart(list);
+        holder = Box.createVerticalBox();
 
-        data = new String[list.size()][3];
+        for(Product p : list.getProductList()){
+            CartItem item = new CartItem(p, tab, this);
+            if(p.isInCart()){
+                cart.addItemToCart(item);
+                holder.add(item.getItem());
+                holder.add(Box.createVerticalStrut(10));
+            }
 
-        for(int i = 0; i < list.size(); ++i){
-            data[i][0] = list.get(i).getProductName();
-            data[i][1] = String.valueOf(list.get(i).getPrice());
-            data[i][2] = String.valueOf(list.get(i).getWarehouseQuantity());
         }
 
-        table = new JTable(data, header);
-    }
+        holder.add(Box.createVerticalGlue());
 
-    private void fillCart(ArrayList<Product> list) {
-        for(Product p : list){
-            this.cart.addItemToCart(p);
-        }
-    }
+        scrollPane = new JScrollPane(holder);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setHorizontalScrollBar(null);
 
-    public JScrollPane createCartTable(){
-        scrollPane = new JScrollPane(table);
+        scrollPane.setMinimumSize(new Dimension(0,tab.getHeight()));
+        scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE,tab.getHeight()));
+        scrollPane.setPreferredSize(new Dimension(tab.getWidth(), tab.getHeight()));
+        scrollPane.setBorder(new LineBorder(Color.ORANGE, 4));
+
         return scrollPane;
     }
+
+    public JScrollPane updateCartTable(ProductList list, JFrame frame){
+        holder.removeAll();
+        cart.getCart().clear();
+
+        for(Product p : list.getProductList()){
+            CartItem item = new CartItem(p, tab, this);
+            if(p.isInCart()){
+                cart.addItemToCart(item);
+                holder.add(item.getItem());
+                holder.add(Box.createVerticalStrut(10));
+            }
+
+        }
+
+        holder.add(Box.createVerticalGlue());
+
+        holder.revalidate();
+        frame.revalidate();
+        scrollPane.repaint();
+        scrollPane.revalidate();
+
+        return scrollPane;
+    }
+
+    public JScrollPane updateCartTable(){
+        holder.removeAll();
+        cart.getCart().clear();
+
+        for(Product p : productList.getProductList()){
+            CartItem item = new CartItem(p, tab, this);
+            if(p.isInCart()){
+                cart.addItemToCart(item);
+                holder.add(item.getItem());
+                holder.add(Box.createVerticalStrut(10));
+            }
+
+        }
+
+        holder.add(Box.createVerticalGlue());
+
+        holder.revalidate();
+        scrollPane.repaint();
+        scrollPane.revalidate();
+
+        return scrollPane;
+    }
+
+
 }

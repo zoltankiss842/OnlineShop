@@ -21,7 +21,7 @@ public class ProductsPanel {
         holder = Box.createVerticalBox();
 
         for(Product p : list.getProductList()){
-            ListItem item = new ListItem(p, tab);
+            ListItem item = new ListItem(p, listAndSearchHolder);
             if(p.isShown()){
                 holder.add(item.getItem());
                 holder.add(Box.createVerticalStrut(10));
@@ -33,6 +33,7 @@ public class ProductsPanel {
 
         listOfProducts = new JScrollPane(holder);
         listOfProducts.getVerticalScrollBar().setUnitIncrement(16);
+        listOfProducts.setHorizontalScrollBar(null);
 
         listOfProducts.setMinimumSize(new Dimension(0,listAndSearchHolder.getHeight()));
         listOfProducts.setMaximumSize(new Dimension(Integer.MAX_VALUE,listAndSearchHolder.getHeight()));
@@ -50,7 +51,7 @@ public class ProductsPanel {
         holder.removeAll();
 
         for(Product p : list.getProductList()){
-            ListItem item = new ListItem(p, tab);
+            ListItem item = new ListItem(p, listAndSearchHolder);
             if(p.isShown()){
                 holder.add(item.getItem());
                 holder.add(Box.createVerticalStrut(10));
@@ -60,6 +61,10 @@ public class ProductsPanel {
 
         holder.add(Box.createVerticalGlue());
 
+        holder.revalidate();
+        frame.revalidate();
+        listOfProducts.repaint();
+        listOfProducts.revalidate();
 
         return listOfProducts;
     }

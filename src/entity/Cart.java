@@ -18,8 +18,7 @@ public class Cart {
         this.cart = cart;
     }
 
-    public boolean addItemToCart(Product product){
-        CartItem item = new CartItem(product);
+    public boolean addItemToCart(CartItem item){
         return this.cart.add(item);
     }
 
