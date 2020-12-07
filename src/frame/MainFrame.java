@@ -67,6 +67,9 @@ public class MainFrame {
                     if(pane.getSelectedIndex() == 1){
                         cartTable.updateCartTable(list, window);
                     }
+                    else if(pane.getSelectedIndex() == 0){
+                        productsPanel.updateProductPanel(list, window);
+                    }
                 }
             }
         });
@@ -83,6 +86,8 @@ public class MainFrame {
         window.setMinimumSize(new Dimension(800, 400));
         window.setMaximumSize(new Dimension(1500, 1000));
         window.setSize(1000,500);
+        //window.setResizable(false);
+
 
         ImageIcon icon = new ImageIcon(favIconPath);
         window.setIconImage(icon.getImage());                   // Sets icon

@@ -75,6 +75,7 @@ public class ListItem {
         productName = new JLabel(product.getProductName());
         productName.setFont(new Font("Serif", Font.BOLD, 24));
         productName.setHorizontalAlignment(JLabel.LEFT);
+        productName.setToolTipText(product.getProductName());
 
         productCategory = new JLabel(product.getCategory());
         productCategory.setFont(new Font("Serif", Font.BOLD, 20));
