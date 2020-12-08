@@ -1,11 +1,11 @@
 package tools;
 
-import entity.County;
-import entity.CountyList;
-import entity.Product;
+import entity.*;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class FileIO {
@@ -26,7 +26,7 @@ public class FileIO {
                 String[] values = line.split(cvsSplitBy);
                 Product temp = null;
                 try{
-                    temp = new Product(values[0], values[1], Double.parseDouble(values[2]), Integer.parseInt(values[3]));
+                    temp = new Product(values[0], values[1], (int)Double.parseDouble(values[2]), Integer.parseInt(values[3]));
                 }
                 catch(NumberFormatException format){
                     System.err.println("Format for " + line + " is wrong. Skipping!");
@@ -130,5 +130,74 @@ public class FileIO {
         }
 
         return temp;
+    }
+
+    public boolean writeTransactionToTxt(String[] data, Cart cart){
+        try{
+            FileWriter fw = new FileWriter(data[0] + ".txt");
+
+            BufferedWriter writer = new BufferedWriter(fw);
+
+            writer.write("---- Rendelési adatok ---\n");
+            writer.write("Rendelési azonosító: " + data[0] + "\n");
+            writer.write("Fizetett összeg: " + data[1] + "Ft\n");
+            writer.write("Megrendelő neve: " + data[2] + " " + data[3] + " " + data[4] + "\n");
+            writer.write("Megrendelő telefonszáma: " + data[5] + "\n");
+            writer.write("Megrendelő emailje: " + data[6] + "\n");
+            writer.write("Megrendelő címe: " + data[12] + " " + data[11] + " " + data[7] + " " + data[8] + " " + data[9] + " " + data[10] + " " + data[13]  + "\n");
+            writer.write("Megjegyzés a rendeléshez: " + data[14]   + "\n");
+            writer.write("\n");
+            writer.write("\n");
+
+            writer.write("---- Fizetési adatok ---\n");
+            writer.write("Fizetési mód: Bankkártya\n");
+            writer.write("Bankártya tulajdonos: " + data[15] + "\n");
+
+            String s = "";
+            for(int i = 0; i < data[16].length(); ++i){
+                if(i < data[16].length()-4){
+                    s = s + "X";
+                }
+                else{
+                    s = s + String.valueOf(data[16].charAt(i));
+                }
+            }
+
+            writer.write("Bankártyaszám: " + s + "\n");
+
+            writer.write("\n");
+            writer.write("\n");
+
+            int maxLength = 0;
+            for(CartItem item : cart.getCart()){
+                if(item.getProduct().getProductName().length() > maxLength){
+                    maxLength = item.getProduct().getProductName().length();
+                }
+            }
+
+
+            String formatString = "%-50s%s";
+            writer.write("---- Rendelt termékek ---\n");
+            for(CartItem item : cart.getCart()){
+                String out = String.format(formatString, item.getProduct().getProductName(), String.valueOf(item.getProduct().getAmountInCart()));
+                out = out + "db\t\t\t\t" + item.getProduct().getAmountInCart()*item.getProduct().getPrice() + "Ft\n";
+                writer.write(out);
+            }
+
+            writer.write("\n");
+            writer.write("\n");
+
+            writer.write("Köszönjük a vásárlást!");
+
+
+            writer.close();
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+
+        return true;
     }
 }

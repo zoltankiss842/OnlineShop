@@ -6,6 +6,7 @@ import entity.ProductList;
 import frame.cart.CartTable;
 import frame.products.ProductsPanel;
 import frame.products.SearchPanel;
+import frame.usersettings.SettingsPanel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -23,10 +24,13 @@ public class MainFrame {
     private final String productsTabTitleDesc = "Raktárunkban megtalálható termékek";
     private final String cartTabTitle = "Kosár";
     private final String cartTabTitleDesc = "Az Ön kosara";
+    private final String settingsTabTitle = "Beállítások";
+    private final String settingsTabTitleDesc = "Felhasználói műveletek és beállítások";
 
     private final String favIconPath = "resources\\images\\favicon.png";
     private final String productsIconPath = "resources\\images\\productsIcon.png";
     private final String cartIconPath = "resources\\images\\cartIcon.png";
+    private final String settingsIconPath = "resources\\images\\settingsIcon.png";
 
     private JFrame window;
     private JTabbedPane tabPane;
@@ -49,9 +53,19 @@ public class MainFrame {
         createTabPane();
         createProductsTab(list);
         createCartTab(list);
+        createSettingTab(cart, list);
 
         window.add(tabPane);
         window.setVisible(true);
+    }
+
+    private void createSettingTab(Cart cart, ProductList list) {
+        ImageIcon icon = new ImageIcon(settingsIconPath); // Sets icon
+
+        SettingsPanel settingsPanel = new SettingsPanel(cart, list);
+
+        tabPane.addTab(settingsTabTitle, icon, settingsPanel.createSettingsPanel(), settingsTabTitleDesc);
+
     }
 
     private void createTabPane() {

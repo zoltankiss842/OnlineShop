@@ -7,7 +7,6 @@ import entity.ProductList;
 import frame.payment.PaymentFrame;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -37,7 +36,7 @@ public class CartTable {
     private Cart cart;
     private ProductList productList;
 
-    // TODO - implement a better cartTable
+    // TODO - no more than available quantity
 
     public JPanel createCartTable(ProductList list, JTabbedPane tab){
         this.tab = tab;
@@ -56,7 +55,7 @@ public class CartTable {
         summaryHolder.setBorder(new LineBorder(Color.pink, 4));
         summaryHolder.setPreferredSize(new Dimension(300, tab.getHeight()));
 
-        summedPrice = new JLabel(sumDescription + amountToPay + "Ft");
+        summedPrice = new JLabel(sumDescription + cart.getAmount() + "Ft");
 
         checkout = new JButton(paymentDescription);
         checkout.addActionListener(setCheckoutActionListener());
@@ -110,12 +109,10 @@ public class CartTable {
 
         holder = Box.createVerticalBox();
 
-        amountToPay = 0;
-
         for(Product p : list.getProductList()){
             CartItem item = new CartItem(p, scrollPane, this);
             if(p.isInCart()){
-                amountToPay += p.getPrice() * p.getAmountInCart();
+                cart.setAmount(cart.getAmount()+(p.getPrice() * p.getAmountInCart()));
                 cart.addItemToCart(item);
                 holder.add(item.getItem());
                 holder.add(Box.createVerticalStrut(10));
@@ -138,12 +135,10 @@ public class CartTable {
         holder.removeAll();
         cart.getCart().clear();
 
-        amountToPay = 0;
-
         for(Product p : list.getProductList()){
             CartItem item = new CartItem(p, scrollPane, this);
             if(p.isInCart()){
-                amountToPay += p.getPrice() * p.getAmountInCart();
+                cart.setAmount(cart.getAmount()+(p.getPrice() * p.getAmountInCart()));
                 cart.addItemToCart(item);
                 holder.add(item.getItem());
                 holder.add(Box.createVerticalStrut(10));
@@ -153,7 +148,7 @@ public class CartTable {
 
         summaryHolder.remove(0);
         summedPrice.removeAll();
-        summedPrice = new JLabel(sumDescription + amountToPay + "Ft");
+        summedPrice = new JLabel(sumDescription + cart.getAmount() + "Ft");
 
         summaryHolder.add(summedPrice, 0);
 
@@ -171,12 +166,10 @@ public class CartTable {
         holder.removeAll();
         cart.getCart().clear();
 
-        amountToPay = 0;
-
         for(Product p : productList.getProductList()){
             CartItem item = new CartItem(p, scrollPane, this);
             if(p.isInCart()){
-                amountToPay += p.getPrice() * p.getAmountInCart();
+                cart.setAmount(cart.getAmount()+(p.getPrice() * p.getAmountInCart()));
                 cart.addItemToCart(item);
                 holder.add(item.getItem());
                 holder.add(Box.createVerticalStrut(10));
@@ -188,7 +181,7 @@ public class CartTable {
 
         summaryHolder.remove(0);
         summedPrice.removeAll();
-        summedPrice = new JLabel(sumDescription + amountToPay + "Ft");
+        summedPrice = new JLabel(sumDescription + cart.getAmount() + "Ft");
 
         summaryHolder.add(summedPrice, 0);
 

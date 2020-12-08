@@ -4,14 +4,14 @@ public class Product {
 
     private String productName;
     private String category;
-    private double price;
+    private int price;
     private int warehouseQuantity;
     private boolean onWishList;
     private boolean inCart;
     private int amountInCart;
     private boolean isShown;
 
-    public Product(String productName, String category, double price, int warehouseQuantity) {
+    public Product(String productName, String category, int price, int warehouseQuantity) {
         this.productName = productName;
         this.category = category;
         this.price = price;
@@ -38,11 +38,11 @@ public class Product {
         this.category = category;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

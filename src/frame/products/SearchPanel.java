@@ -15,13 +15,19 @@ public class SearchPanel {
 
     private final String searchLabelText = "Keresés a termékek között:";
     private final String infoLabelDesc = "Termék megjelenítve: ";
+    private final String wishToCartDesc = "Kívánságlista -> Kosár";
+    private final String wishToCartToolTip = "Kívánságlistán lévő termékek kosárba helyezése";
 
     private JPanel listAndSearchHolder;
     private JPanel searchPanel;
     private JTextField searchField;
     private JLabel searchFieldLabel;
     private JComboBox<String> searchCategory;
+    private JComboBox<String> searchType;
     private JLabel infoLabel;
+
+    private JPanel infoPanel;
+    private JButton wishToCart;
 
     private ProductList list;
     private JFrame frame;
@@ -39,23 +45,37 @@ public class SearchPanel {
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(5,5,5,5);
 
+
         searchPanel.setBorder(new LineBorder(Color.MAGENTA, 4));
 
-        searchPanel.setMinimumSize(new Dimension(0,50));
-        searchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
-        searchPanel.setPreferredSize(new Dimension(listAndSearchHolder.getWidth(), 50));
+        searchPanel.setMinimumSize(new Dimension(0,70));
+        searchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,70));
+        searchPanel.setPreferredSize(new Dimension(listAndSearchHolder.getWidth(), 70));
 
         createSearchField();
         createSearchCategory(list);
         createInfoLabel();
+        createInfoPanel();
 
         searchPanel.add(searchFieldLabel,c);
         searchPanel.add(searchField,c);
         searchPanel.add(searchCategory,c);
         searchPanel.add(infoLabel, c);
+        searchPanel.add(infoPanel,c);
 
 
         return searchPanel;
+    }
+
+    private void createInfoPanel() {
+        infoPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        wishToCart = new JButton(wishToCartDesc);
+        wishToCart.setToolTipText(wishToCartToolTip);
+
+        infoPanel.add(wishToCart);
+
     }
 
     private void createInfoLabel() {

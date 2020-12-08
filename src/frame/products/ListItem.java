@@ -45,7 +45,7 @@ public class ListItem {
         item.setMinimumSize(new Dimension(0,100));
         item.setMaximumSize(new Dimension(5000,100));
         item.setPreferredSize(new Dimension(panel.getWidth(), 100));
-        item.setBorder(new EmptyBorder(5,50,50,5));
+        item.setBorder(new EmptyBorder(5,5,5,5));
 
         readIcons();
         createLabels(this.product);
@@ -81,11 +81,11 @@ public class ListItem {
         productCategory.setFont(new Font("Serif", Font.BOLD, 20));
         productCategory.setHorizontalAlignment(JLabel.CENTER);
 
-        productPrice = new JLabel(String.valueOf(product.getPrice()));
+        productPrice = new JLabel(String.valueOf(product.getPrice()) + " Ft");
         productPrice.setFont(new Font("Serif", Font.BOLD, 24));
         productPrice.setHorizontalAlignment(JLabel.CENTER);
 
-        productQuantity = new JLabel(String.valueOf(product.getWarehouseQuantity()));
+        productQuantity = new JLabel("Raktáron: " + String.valueOf(product.getWarehouseQuantity()));
         productQuantity.setFont(new Font("Serif", Font.BOLD, 20));
         productQuantity.setHorizontalAlignment(JLabel.CENTER);
 
