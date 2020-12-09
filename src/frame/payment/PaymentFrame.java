@@ -2,6 +2,7 @@ package frame.payment;
 
 import entity.Cart;
 import entity.CountyList;
+import frame.cart.CartTable;
 import tools.FileIO;
 import tools.StringManipulation;
 
@@ -144,41 +145,25 @@ public class PaymentFrame {
     private boolean cardSelected;
 
     private JFrame paymentFrame;
+    private JFrame mainFrame;
+    private CartTable cartTable;
     private Cart cart;
     private StringManipulation manipulation;
     private FileIO io;
 
-    public void createPaymentFrame(Cart cart){
+    public void createPaymentFrame(Cart cart, JFrame frame, CartTable cartTable){
         cardSelected = false;
         io = new FileIO();
 
         this.cart = cart;
+        this.cartTable = cartTable;
+
+        mainFrame = frame;
+        mainFrame.setEnabled(false);
 
         paymentFrame = new JFrame(paymentFrameTitle);
-        paymentFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        paymentFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         paymentFrame.setLayout(new BorderLayout());
-
-        /*paymentFrame.addComponentListener(new ComponentListener() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                System.out.println("Width: " + paymentFrame.getWidth() + ", Height: " + paymentFrame.getHeight());
-            }
-
-            @Override
-            public void componentMoved(ComponentEvent e) {
-
-            }
-
-            @Override
-            public void componentShown(ComponentEvent e) {
-
-            }
-
-            @Override
-            public void componentHidden(ComponentEvent e) {
-
-            }
-        });*/
 
         paymentFrame.setSize(600,650);
         paymentFrame.setLocationRelativeTo(null);
@@ -239,6 +224,8 @@ public class PaymentFrame {
         payButton.addActionListener(payButtonActionListener());
 
         abortPayment = new JButton(abortPaymentButtonDesc);
+        abortPayment.addActionListener(createAbortPaymentActionListener());
+
         payButtonsHolder = new JPanel(new GridBagLayout());
 
         GridBagConstraints c = new GridBagConstraints();
@@ -257,6 +244,31 @@ public class PaymentFrame {
 
         paymentFrame.add(payButtonsHolder, BorderLayout.PAGE_END);
 
+    }
+
+    private ActionListener createAbortPaymentActionListener() {
+        ActionListener action = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object[] options = {"Igen, megszakítom", "Nem, folytatni szeretném"};
+                int n = JOptionPane.showOptionDialog(
+                        paymentFrame,
+                        "Biztosan meg szeretné szakítani a fizetést?",
+                        "Fizetés megszakítása",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[1]);
+
+                if(n == JOptionPane.YES_OPTION){
+                    mainFrame.setEnabled(true);
+                    paymentFrame.dispose();
+                }
+            }
+        };
+
+        return action;
     }
 
     private ActionListener payButtonActionListener() {
@@ -279,6 +291,12 @@ public class PaymentFrame {
                             "Sikeres fizetés",
                             JOptionPane.INFORMATION_MESSAGE,
                             new ImageIcon(successfullPay));
+
+                    mainFrame.setEnabled(true);
+                    cart.generateNewId();
+                    cart.emptyCartAfterSuccessfulPurchase();
+                    cartTable.updateCartTable();
+                    paymentFrame.dispose();
                 }
             }
         };
@@ -464,7 +482,9 @@ public class PaymentFrame {
         expCvcHolder.add(cvc);
 
         countryOfIssueDescription = new JLabel(countryOfIssueDesc);
-        countryOfIssue = new JComboBox<>(new FileIO().readFromTxtFileCountries(countriesFilePath));
+        String[] temp = new FileIO().readFromTxtFileCountries(countriesFilePath);
+        temp[0] = "Afganisztán";
+        countryOfIssue = new JComboBox<>(temp);
         countryOfIssueHolder = new JPanel(new GridLayout(1,2));
         countryOfIssueHolder.add(countryOfIssueDescription);
         countryOfIssueHolder.add(countryOfIssue);

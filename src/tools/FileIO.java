@@ -1,12 +1,17 @@
 package tools;
 
 import entity.*;
+import frame.cart.CartItem;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class FileIO {
     
@@ -134,13 +139,19 @@ public class FileIO {
 
     public boolean writeTransactionToTxt(String[] data, Cart cart){
         try{
-            FileWriter fw = new FileWriter(data[0] + ".txt");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDateTime now = LocalDateTime.now();
+
+            String[] id = data[0].split("-");
+
+            FileWriter fw = new FileWriter(data[3] + " " + data[4] + " - " + id[0] + ".txt");
 
             BufferedWriter writer = new BufferedWriter(fw);
 
             writer.write("---- Rendelési adatok ---\n");
             writer.write("Rendelési azonosító: " + data[0] + "\n");
             writer.write("Fizetett összeg: " + data[1] + "Ft\n");
+            writer.write("Rendelés dátuma: " + dtf.format(now) + "\n");
             writer.write("Megrendelő neve: " + data[2] + " " + data[3] + " " + data[4] + "\n");
             writer.write("Megrendelő telefonszáma: " + data[5] + "\n");
             writer.write("Megrendelő emailje: " + data[6] + "\n");
@@ -197,6 +208,167 @@ public class FileIO {
             return false;
         }
 
+
+        return true;
+    }
+
+    public boolean writeProductToTxt(ProductList list){
+        try{
+            String welcomeCartString = "Az Ön kosarának tartalma:\n";
+            String emptyCartString = "Az Ön kosara üres.\n";
+
+            String welcomeWishListString = "Az Ön kívánságlistája:\n";
+            String emptyWishListString = "Az Ön kívánságlistája üres.\n";
+
+            FileWriter fwCart = new FileWriter("kosar.txt", false);
+            FileWriter fwWishList = new FileWriter("kivansaglista.txt", false);
+
+            BufferedWriter writer = new BufferedWriter(fwCart);
+            BufferedWriter writer2 = new BufferedWriter(fwWishList);
+
+            StringBuilder toWriteCart = new StringBuilder();
+            StringBuilder toWriteWishList = new StringBuilder();
+
+            toWriteCart.append(welcomeCartString);
+            toWriteWishList.append(welcomeWishListString);
+
+            int cartItems = 0;
+            int wishItems = 0;
+
+            for(Product item : list.getProductList()){
+                if(item.isOnWishList() && item.isInCart()){
+                    String temp = String.format("%-30s%-15s%-15s%-15s%-15s",
+                            item.getProductName(),
+                            item.getCategory(),
+                            item.getPrice() + "Ft",
+                            item.getAmountInCart() + "db",
+                            item.getAmountInCart()*item.getPrice() + "Ft");
+
+                    toWriteCart.append(temp + "\n");
+
+                    temp = String.format("%-30s%-15s%-15s",
+                            item.getProductName(),
+                            item.getCategory(),
+                            item.getPrice() + "Ft");
+
+                    toWriteWishList.append(temp + "\n");
+
+
+                    cartItems++;
+                    wishItems++;
+                }
+                else if(item.isOnWishList() && !item.isInCart()){
+                    String temp = String.format("%-30s%-15s%-15s",
+                            item.getProductName(),
+                            item.getCategory(),
+                            item.getPrice() + "Ft");
+
+                    toWriteWishList.append(temp + "\n");
+
+                    wishItems++;
+                }
+                else if(!item.isOnWishList() && item.isInCart()){
+                    String temp = String.format("%-30s%-15s%-15s%-15s%-15s",
+                            item.getProductName(),
+                            item.getCategory(),
+                            item.getPrice() + "Ft",
+                            item.getAmountInCart() + "db",
+                            item.getAmountInCart()*item.getPrice() + "Ft");
+
+                    toWriteCart.append(temp + "\n");
+
+                    cartItems++;
+                }
+
+            }
+
+            if(cartItems == 0){
+                writer.write(welcomeCartString.concat(emptyCartString));
+            }
+            else{
+                writer.write(toWriteCart.toString());
+            }
+
+            if(wishItems == 0){
+                writer2.write(welcomeWishListString.concat(emptyWishListString));
+            }
+            else{
+                writer2.write(toWriteWishList.toString());
+            }
+
+
+            writer.close();
+            writer2.close();
+
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+
+        return true;
+    }
+
+    public boolean readCartFromTxt(ProductList list, String filePath){
+        try{
+
+            BufferedReader br = new BufferedReader(new FileReader(filePath));
+
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split("\t");
+                Product p = new Product(
+                        values[0],
+                        values[1],
+                        values[2],
+                        Integer.parseInt(values[3]),
+                        Integer.parseInt(values[4]));
+                for(Product product : list.getProductList()){
+                    if(product.equals(p) && p.getAmountInCart()>0){
+                        product.setInCart(true);
+                        product.setAmountInCart(p.getAmountInCart());
+                    }
+                }
+            }
+
+            br.close();
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean readWishListFromTxt(ProductList list, String filePath){
+        ArrayList<Product> readInProducts;
+        try{
+            readInProducts = new ArrayList<>();
+
+            BufferedReader br = new BufferedReader(new FileReader(filePath));
+
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split("\t");
+                Product p = new Product(
+                        values[0],
+                        values[1],
+                        values[2],
+                        Integer.parseInt(values[3]),
+                        Integer.parseInt(values[4]));
+                for(Product product : list.getProductList()){
+                    if(product.equals(p)){
+                        product.setOnWishList(true);
+                    }
+                }
+            }
+
+            br.close();
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
 
         return true;
     }

@@ -7,14 +7,17 @@ import frame.cart.CartTable;
 import frame.products.ProductsPanel;
 import frame.products.SearchPanel;
 import frame.usersettings.SettingsPanel;
+import tools.FileIO;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class MainFrame {
 
@@ -53,24 +56,13 @@ public class MainFrame {
         createTabPane();
         createProductsTab(list);
         createCartTab(list);
-        createSettingTab(cart, list);
 
         window.add(tabPane);
         window.setVisible(true);
     }
 
-    private void createSettingTab(Cart cart, ProductList list) {
-        ImageIcon icon = new ImageIcon(settingsIconPath); // Sets icon
-
-        SettingsPanel settingsPanel = new SettingsPanel(cart, list);
-
-        tabPane.addTab(settingsTabTitle, icon, settingsPanel.createSettingsPanel(), settingsTabTitleDesc);
-
-    }
-
     private void createTabPane() {
         tabPane = new JTabbedPane();
-        tabPane.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
         tabPane.setTabPlacement(JTabbedPane.TOP);
 
         tabPane.addChangeListener(new ChangeListener() {
@@ -97,10 +89,32 @@ public class MainFrame {
         window = new JFrame(frameTitle + " " + version);        // creates Frame
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // What should the X do?
 
-        window.setMinimumSize(new Dimension(800, 400));
-        window.setMaximumSize(new Dimension(1500, 1000));
-        window.setSize(1000,500);
-        //window.setResizable(false);
+        window.setSize(1200,700);
+        window.setResizable(false);
+
+        window.setBackground(new Color(129,102,122));
+
+        window.addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                System.out.println("Width: " + window.getWidth() + ", Height: " + window.getHeight());
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+
+            }
+        });
 
 
         ImageIcon icon = new ImageIcon(favIconPath);
@@ -108,6 +122,49 @@ public class MainFrame {
 
         window.setLocationRelativeTo(null);                     // Set frame to the center of screen
 
+        window.addWindowListener(createWindowListener());
+    }
+
+    private WindowListener createWindowListener() {
+        WindowListener listener = new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                FileIO io = new FileIO();
+                io.writeProductToTxt(list);
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        };
+
+        return listener;
     }
 
     /**
@@ -150,6 +207,6 @@ public class MainFrame {
 
         cartTable = new CartTable();
 
-        tabPane.addTab(cartTabTitle, icon, cartTable.createCartTable(list, tabPane), cartTabTitleDesc);
+        tabPane.addTab(cartTabTitle, icon, cartTable.createCartTable(list, tabPane, window), cartTabTitleDesc);
     }
 }

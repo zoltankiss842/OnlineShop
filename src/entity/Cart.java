@@ -1,12 +1,14 @@
 package entity;
 
+import frame.cart.CartItem;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class Cart {
 
     private ArrayList<CartItem> cart;
-    private double amount;
+    private int amount;
     private String id;
 
     public Cart(){
@@ -23,11 +25,11 @@ public class Cart {
         this.cart = cart;
     }
 
-    public double getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
@@ -42,6 +44,18 @@ public class Cart {
     public void printItemsInCart(){
         for(CartItem item : cart){
             System.out.println(item.getProduct().toString());
+        }
+    }
+
+    public void generateNewId() {
+        this.id = UUID.randomUUID().toString();
+    }
+
+    public void emptyCartAfterSuccessfulPurchase(){
+        for(CartItem item : this.cart){
+            item.getProduct().setWarehouseQuantity(item.getProduct().getWarehouseQuantity()-item.getProduct().getAmountInCart());
+            item.getProduct().setInCart(false);
+            item.getProduct().setAmountInCart(0);
         }
     }
 }

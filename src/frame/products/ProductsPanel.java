@@ -6,6 +6,7 @@ import entity.ProductList;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.util.HashMap;
 
 public class ProductsPanel {
 
@@ -13,20 +14,32 @@ public class ProductsPanel {
     private JScrollPane listOfProducts;
     private JTabbedPane tab;
     private JPanel listAndSearchHolder;
+    private HashMap<Integer, ListItem> listItemMap;
 
     public JScrollPane createProductsPanel(ProductList list, JTabbedPane tab, JPanel listAndSearchHolder){
         this.tab = tab;
         this.listAndSearchHolder = listAndSearchHolder;
+        this.listItemMap = new HashMap<>();
 
         holder = Box.createVerticalBox();
 
+        int numberOfItems = 0;
+
         for(Product p : list.getProductList()){
-            ListItem item = new ListItem(p, listAndSearchHolder);
             if(p.isShown()){
+                ListItem item = new ListItem(p, listAndSearchHolder);
+                item.setShown(true);
+                listItemMap.put(p.hashCode(), item);
                 holder.add(item.getItem());
                 holder.add(Box.createVerticalStrut(10));
+                numberOfItems++;
             }
 
+        }
+
+        if(numberOfItems == 0){
+            EmptyListItem empty = new EmptyListItem();
+            holder.add(empty.getItem());
         }
 
         holder.add(Box.createVerticalGlue());
@@ -43,27 +56,37 @@ public class ProductsPanel {
         return listOfProducts;
     }
 
-    public JScrollPane getListOfProducts() {
-        return listOfProducts;
-    }
-
     public JScrollPane updateProductPanel(ProductList list, JFrame frame){
         holder.removeAll();
 
+        int numberOfItems = 0;
+
         for(Product p : list.getProductList()){
-            ListItem item = new ListItem(p, listAndSearchHolder);
             if(p.isShown()){
-                holder.add(item.getItem());
+                listItemMap.get(p.hashCode()).setShown(true);
+                listItemMap.get(p.hashCode()).update();
+                holder.add(listItemMap.get(p.hashCode()).getItem());
                 holder.add(Box.createVerticalStrut(10));
+                numberOfItems++;
+            }
+            else{
+                listItemMap.get(p.hashCode()).setShown(false);
+                listItemMap.get(p.hashCode()).update();
             }
 
         }
 
-        holder.add(Box.createVerticalGlue());
+        if(numberOfItems == 0){
+            EmptyListItem empty = new EmptyListItem();
+            holder.add(empty.getItem());
+        }
 
+        holder.add(Box.createVerticalGlue());
         holder.revalidate();
-        frame.revalidate();
-        listOfProducts.repaint();
+
+        frame.repaint();
+        frame.validate();
+
         listOfProducts.revalidate();
 
         return listOfProducts;

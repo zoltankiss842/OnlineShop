@@ -1,4 +1,4 @@
-﻿Afganisztán	Afgán Iszlám Köztársaság (hivatalos), Afganisztáni Iszlám Köztársaság (elfogadott)	AF	Kabul	afgán, afganisztáni, afgán iszlám köztársasági, afganisztáni iszlám köztársasági	afgáni	AFN	puli	Afghanistan
+﻿Afganisztán
 Aland-szigetek 	Åland-szigetek	AX	Mariehamn	ålandi, Åland-szigeteki	euró	EUR	cent	Åland
 Albánia	Albán Köztársaság	AL	Tirana	albán, albániai, albán köztársasági	lek	ALL	qindar	Albania
 Algéria	Algériai Demokratikus és Népi Köztársaság	DZ	Algír	algériai, algériai demokratikus és népi köztársasági	algériai dinár	DZD	centime	Algeria

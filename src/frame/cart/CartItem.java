@@ -1,15 +1,20 @@
-package entity;
+package frame.cart;
 
+import entity.Product;
 import frame.cart.CartTable;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class CartItem {
+
+    private final String removeFromCartDesc = "Eltávolítás";
+    private final String addToWishlistDesc = "Kívánságlistára";
 
     private Product product;
 
@@ -30,21 +35,14 @@ public class CartItem {
         this.product = product;
         this.cartTable = cartTable;
 
-        item.setMinimumSize(new Dimension(0,60));
-        item.setMaximumSize(new Dimension(Integer.MAX_VALUE,60));
-        item.setPreferredSize(new Dimension(pane.getWidth()-5,60));
+        item.setMinimumSize(new Dimension(300,60));
+        item.setMaximumSize(new Dimension(2000,60));
+        item.setPreferredSize(new Dimension(300, 60));
         item.setBorder(new LineBorder(Color.BLACK, 4));
 
         createLabels();
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(3,5,3,5);
-        c.gridwidth = 5;
-        c.weightx = 0.1;
-
-        c.weightx = 0.1;
         item.add(productName);
-        c.weightx = 1.0;
         item.add(productPrice);
         item.add(spinnerHolder);
         item.add(toBePaidForProduct);
@@ -57,7 +55,7 @@ public class CartItem {
         productName.setHorizontalAlignment(JLabel.LEFT);
         productName.setToolTipText(product.getProductName());
 
-        productPrice = new JLabel(String.valueOf(product.getPrice()));
+        productPrice = new JLabel(String.valueOf(product.getPrice()) + " Ft");
         productPrice.setFont(new Font("Serif", Font.BOLD, 18));
         productPrice.setHorizontalAlignment(JLabel.CENTER);
 
@@ -71,18 +69,45 @@ public class CartItem {
 
         spinnerHolder.add(amountInCart);
 
-        toBePaidForProduct = new JLabel(String.valueOf(product.getAmountInCart()*product.getPrice()));
+        toBePaidForProduct = new JLabel(String.valueOf(product.getAmountInCart()*product.getPrice()) + " Ft");
         toBePaidForProduct.setFont(new Font("Serif", Font.BOLD, 18));
         toBePaidForProduct.setHorizontalAlignment(JLabel.CENTER);
 
         buttonHolder = new JPanel(new BorderLayout());
 
-        removeFromCart = new JButton("Eltavolitas");
-        addToWishlist = new JButton("Kedvencekhez adas");
+        removeFromCart = new JButton(removeFromCartDesc);
+        removeFromCart.addActionListener(createRemoveFromCartActionListener());
+        addToWishlist = new JButton(addToWishlistDesc);
+        addToWishlist.addActionListener(createAddToWishListActionListener());
 
         buttonHolder.add(removeFromCart, BorderLayout.PAGE_START);
         buttonHolder.add(addToWishlist,BorderLayout.PAGE_END);
 
+    }
+
+    private ActionListener createAddToWishListActionListener() {
+        ActionListener action = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                product.setOnWishList(true);
+            }
+        };
+
+        return action;
+    }
+
+    private ActionListener createRemoveFromCartActionListener() {
+        ActionListener action = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                product.setAmountInCart(0);
+                product.setInCart(false);
+
+                cartTable.updateCartTable();
+            }
+        };
+
+        return action;
     }
 
     private ChangeListener createChangeListener() {
@@ -93,7 +118,10 @@ public class CartItem {
                     JSpinner spinner = (JSpinner) e.getSource();
                     int amount = (Integer) spinner.getValue();
 
-                    if(amount == 0){
+                    if(amount > 999 || amount > product.getWarehouseQuantity()){
+                        spinner.setValue(999);
+                    }
+                    else if(amount == 0){
                         product.setInCart(false);
                         product.setAmountInCart(amount);
                     }

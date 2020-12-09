@@ -16,6 +16,7 @@ public class ProductList {
         FileIO io = new FileIO();
         productList = new ArrayList<>();
         io.readFromFile(productList, filePath);
+        //io.readWishListFromTxt(this, )
         updateCategoryList();
     }
 

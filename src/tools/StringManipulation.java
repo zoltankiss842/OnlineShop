@@ -13,8 +13,10 @@ public class StringManipulation {
 
     public String sanitizeForNumbers(String input){
         input = input.replaceAll("\\s+","");
+        input = input.replaceAll(",","");
 
         for(int i = 0; i < input.length(); ++i){
+
             if(!Character.isDigit(input.charAt(i))){
                 return null;
             }
@@ -134,5 +136,34 @@ public class StringManipulation {
         }
 
         return true;
+    }
+
+    public String sanitizeString(String s){
+        StringBuilder result = new StringBuilder();
+        boolean wasOneSpace = false;
+
+        for(int i = 0; i < s.length();++i){
+            char c = s.charAt(i);
+            if(!Character.isSpaceChar(c) && !Character.isLetterOrDigit(c)){
+                continue;
+            }
+
+            if(Character.isSpaceChar(c) && !wasOneSpace){
+                result.append(c);
+                wasOneSpace = true;
+            }
+
+            if(Character.isSpaceChar(c) && wasOneSpace){
+                continue;
+            }
+
+            if(Character.isLetterOrDigit(c)){
+                result.append(c);
+                wasOneSpace = false;
+            }
+        }
+
+
+        return result.toString();
     }
 }
