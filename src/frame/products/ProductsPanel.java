@@ -2,32 +2,64 @@ package frame.products;
 
 import entity.Product;
 import entity.ProductList;
+import frame.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
+/**
+ * Represents a list of products.
+ */
 public class ProductsPanel {
 
-    private Box holder;
+    // Fields for visual representation
     private JScrollPane listOfProducts;
-    private JTabbedPane tab;
-    private JPanel listAndSearchHolder;
+    private Box holder;
+
+    private ProductList list;
+
+    // List containing products
     private HashMap<Integer, ListItem> listItemMap;
 
-    public JScrollPane createProductsPanel(ProductList list, JTabbedPane tab, JPanel listAndSearchHolder){
-        this.tab = tab;
-        this.listAndSearchHolder = listAndSearchHolder;
+    /**
+     * Creates a component, which contains products
+     * @param list                      a list of products
+     * @return                          scrollpane containing the product
+     */
+    public JScrollPane createProductsPanel(ProductList list){
+        this.list = list;
         this.listItemMap = new HashMap<>();
 
         holder = Box.createVerticalBox();
 
+        createItems();
+
+        createListOfProducts();
+
+        return listOfProducts;
+    }
+
+    /**
+     * Creates the scrollpanel
+     */
+    private void createListOfProducts() {
+        listOfProducts = new JScrollPane(holder);
+        listOfProducts.getVerticalScrollBar().setUnitIncrement(16);
+        listOfProducts.setHorizontalScrollBar(null);
+
+        listOfProducts.setPreferredSize(new Dimension(MainFrame.FRAME_WIDTH, MainFrame.FRAME_HEIGHT));
+    }
+
+    /**
+     * Adding the products on the first time
+     */
+    private void createItems() {
         int numberOfItems = 0;
 
         for(Product p : list.getProductList()){
             if(p.isShown()){
                 ListItem item = new ListItem(p);
-                item.setShown(true);
                 listItemMap.put(p.hashCode(), item);
                 holder.add(item.getItem());
                 holder.add(Box.createVerticalStrut(5));
@@ -42,19 +74,12 @@ public class ProductsPanel {
         }
 
         holder.add(Box.createVerticalGlue());
-
-        listOfProducts = new JScrollPane(holder);
-        listOfProducts.getVerticalScrollBar().setUnitIncrement(16);
-        listOfProducts.setHorizontalScrollBar(null);
-
-        listOfProducts.setMinimumSize(new Dimension(0,listAndSearchHolder.getHeight()));
-        listOfProducts.setMaximumSize(new Dimension(Integer.MAX_VALUE,listAndSearchHolder.getHeight()));
-        listOfProducts.setPreferredSize(new Dimension(listAndSearchHolder.getWidth(), listAndSearchHolder.getHeight()));
-
-        return listOfProducts;
     }
 
-    public JScrollPane updateProductPanel(ProductList list, JFrame frame){
+    /**
+     * Updating the panel, to refresh the products to show
+     */
+    public void updateProductPanel(){
         holder.removeAll();
 
         int numberOfItems = 0;
@@ -80,13 +105,7 @@ public class ProductsPanel {
         }
 
         holder.add(Box.createVerticalGlue());
-        holder.revalidate();
 
-        frame.repaint();
-        frame.validate();
-
-        listOfProducts.revalidate();
-
-        return listOfProducts;
+        listOfProducts.repaint();
     }
 }

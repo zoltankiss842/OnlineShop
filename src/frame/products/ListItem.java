@@ -19,6 +19,7 @@ import java.io.File;
 public class ListItem {
 
     public static final int LIST_ITEM_WIDTH = 800;
+    public static final int LIST_ITEM_MAXWIDTH = 1500;
     public static final int LIST_ITEM_HEIGHT = 100;
 
     // Fields for file paths and labels
@@ -63,6 +64,7 @@ public class ListItem {
         this.backgroundColor = new Color(208, 220, 210);
 
         item.setPreferredSize(new Dimension(LIST_ITEM_WIDTH, LIST_ITEM_HEIGHT));
+        item.setMaximumSize(new Dimension(LIST_ITEM_MAXWIDTH, LIST_ITEM_HEIGHT));
         item.setBackground(backgroundColor);
 
         readIcons();

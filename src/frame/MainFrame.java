@@ -72,7 +72,7 @@ public class MainFrame {
                         cartTable.updateCartTable();
                     }
                     else if(pane.getSelectedIndex() == 0){
-                        productsPanel.updateProductPanel(list, window);
+                        productsPanel.updateProductPanel();
                     }
                 }
             }
@@ -170,7 +170,7 @@ public class MainFrame {
      * display as a list
      */
     private void createProductsPanel(ProductList list){
-        listAndSearchHolder.add(productsPanel.createProductsPanel(list, tabPane, listAndSearchHolder), BorderLayout.CENTER);
+        listAndSearchHolder.add(productsPanel.createProductsPanel(list), BorderLayout.CENTER);
 
     }
 
