@@ -3,6 +3,10 @@ package tools;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class for dealing with verification/sanitation of
+ * user input.
+ */
 public class StringManipulation {
 
     private final String lettersAndDigitsRegex = "[^a-zA-ZöÖüÜóÓőŐúÚűŰáÁéÉ0-9.\\s-]";
@@ -11,6 +15,12 @@ public class StringManipulation {
     private final String houseNumberRegex = "[^a-zA-ZöÖüÜóÓőŐúÚűŰáÁéÉ0-9.-\\/\\s]";
     private final String cardNumberRegex = "[^0-9]";
 
+    /**
+     * Clears input string of whitespaces and commas
+     * checks if every character is a digit, else it fails
+     * @param input     string to check
+     * @return          null if the string failed verification
+     */
     public String sanitizeForNumbers(String input){
         input = input.replaceAll("\\s+","");
         input = input.replaceAll(",","");
@@ -25,6 +35,13 @@ public class StringManipulation {
         return input;
     }
 
+    /**
+     * Checks if string cointains specified amount of digit
+     * and that digit are in the first numer of digits
+     * @param s         string to check
+     * @param amount    specified number
+     * @return          difference
+     */
     public int containsExactAmountDigit(String s, int amount){
         if(s.length()>=amount){
             String firstFour = s.substring(0, amount);
@@ -40,6 +57,12 @@ public class StringManipulation {
 
     }
 
+    /**
+     * If the regex find a pattern the string fails the verification
+     * @param s                     string to check
+     * @param acceptEmptyString     if we do not care if it fails
+     * @return                      to accept or not
+     */
     public boolean isValidString(String s, boolean acceptEmptyString){
         if(!acceptEmptyString && s.length() == 0){
             return false;
@@ -51,6 +74,12 @@ public class StringManipulation {
         return !matcher.find();
     }
 
+    /**
+     * If the regex find a pattern the string fails the verification
+     * @param s                     string to check
+     * @param acceptEmptyString     if we do not care if it fails
+     * @return                      to accept or not
+     */
     public boolean isValidPhoneNumber(String s, boolean acceptEmptyString){
         if(!acceptEmptyString && s.length() == 0){
             return false;
@@ -62,6 +91,12 @@ public class StringManipulation {
         return !matcher.find();
     }
 
+    /**
+     * If the regex find a pattern the string fails the verification
+     * @param s                     string to check
+     * @param acceptEmptyString     if we do not care if it fails
+     * @return                      to accept or not
+     */
     public boolean isValidEmail(String s, boolean acceptEmptyString){
         if(!acceptEmptyString && s.length() == 0){
             return false;
@@ -73,6 +108,12 @@ public class StringManipulation {
         return matcher.find();
     }
 
+    /**
+     * If the regex find a pattern the string fails the verification
+     * @param s                     string to check
+     * @param acceptEmptyString     if we do not care if it fails
+     * @return                      to accept or not
+     */
     public boolean isValidHouseNumber(String s, boolean acceptEmptyString){
         if(!acceptEmptyString && s.length() == 0){
             return false;
@@ -84,6 +125,12 @@ public class StringManipulation {
         return !matcher.find();
     }
 
+    /**
+     * If the regex find a pattern the string fails the verification
+     * @param s                     string to check
+     * @param acceptEmptyString     if we do not care if it fails
+     * @return                      to accept or not
+     */
     public boolean isValidCardNumber(String s, boolean acceptEmptyString){
         if(!acceptEmptyString && s.length() == 0){
             return false;
@@ -99,6 +146,12 @@ public class StringManipulation {
         return !matcher.find();
     }
 
+    /**
+     * If the regex find a pattern the string fails the verification
+     * @param s                     string to check
+     * @param acceptEmptyString     if we do not care if it fails
+     * @return                      to accept or not
+     */
     public boolean isValidPostCode(String s, boolean acceptEmptyString){
         if(!acceptEmptyString && s.length() == 0){
             return false;
@@ -114,6 +167,11 @@ public class StringManipulation {
         return !matcher.find();
     }
 
+    /**
+     * Used for product name sanitization
+     * @param s         string to sanitize
+     * @return          sanitized string
+     */
     public String sanitizeString(String s){
         StringBuilder result = new StringBuilder();
         boolean wasOneSpace = false;

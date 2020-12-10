@@ -4,6 +4,10 @@ import entity.Product;
 
 import java.util.Comparator;
 
+/**
+ * Implementation for popularity sorting
+ * Ascending and Descending
+ */
 public class Popularity implements Comparator<Product> {
     @Override
     public int compare(Product o1, Product o2) {

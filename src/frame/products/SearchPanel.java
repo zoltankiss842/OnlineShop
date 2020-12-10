@@ -2,9 +2,9 @@ package frame.products;
 
 import entity.Product;
 import entity.ProductList;
-import tools.sort.AlphabeticalAsc;
+import tools.sort.Alphabetical;
 import tools.sort.Popularity;
-import tools.sort.PriceAsc;
+import tools.sort.Price;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -49,8 +49,8 @@ public class SearchPanel {
     private Color backgroundColor;
 
     // Fields for comparator classes
-    private AlphabeticalAsc alphaAsc;
-    private PriceAsc priceAsc;
+    private Alphabetical alphaAsc;
+    private Price price;
     private Popularity popularity;
 
     /**
@@ -66,8 +66,8 @@ public class SearchPanel {
         this.productsPanel = panel;
         this.backgroundColor = new Color(171, 196, 187);
 
-        alphaAsc = new AlphabeticalAsc();
-        priceAsc = new PriceAsc();
+        alphaAsc = new Alphabetical();
+        price = new Price();
         popularity = new Popularity();
 
         listAndSearchHolder = new JPanel(new BorderLayout());
@@ -200,7 +200,7 @@ public class SearchPanel {
      * Sort by descending price
      */
     private void applyPriceDesc() {
-        Collections.sort(list.getProductList(), priceAsc.reversed());
+        Collections.sort(list.getProductList(), price.reversed());
 
         updatePanel();
     }
@@ -209,7 +209,7 @@ public class SearchPanel {
      * Sort by ascending price
      */
     private void applyPriceAsc() {
-        Collections.sort(list.getProductList(), priceAsc);
+        Collections.sort(list.getProductList(), price);
 
         updatePanel();
     }

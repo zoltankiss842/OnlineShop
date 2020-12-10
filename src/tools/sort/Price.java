@@ -4,11 +4,21 @@ import entity.Product;
 
 import java.util.Comparator;
 
-public class AlphabeticalAsc implements Comparator<Product> {
-
+/**
+ * Implementation for price sorting
+ * Ascending and Descending
+ */
+public class Price implements Comparator<Product> {
     @Override
     public int compare(Product o1, Product o2) {
-        return o1.getSanitizedProductName().compareTo(o2.getSanitizedProductName());
+        if(o1.getPrice() > o2.getPrice()){
+            return 1;
+        }
+        if(o1.getPrice() < o2.getPrice()){
+            return -1;
+        }
+
+        return 0;
     }
 
     @Override
@@ -16,13 +26,10 @@ public class AlphabeticalAsc implements Comparator<Product> {
         Comparator<Product> reverse = new Comparator<Product>() {
             @Override
             public int compare(Product o1, Product o2) {
-                int result = o1.getSanitizedProductName().compareTo(o2.getSanitizedProductName());
-
-                if(result > 0){
+                if(o1.getPrice() > o2.getPrice()){
                     return -1;
                 }
-
-                if(result < 0){
+                if(o1.getPrice() < o2.getPrice()){
                     return 1;
                 }
 

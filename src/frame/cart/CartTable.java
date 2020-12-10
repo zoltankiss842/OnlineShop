@@ -128,7 +128,7 @@ public class CartTable {
 
         summaryHolder.setPreferredSize(new Dimension(SUMMARY_WIDTH, MainFrame.FRAME_HEIGHT));
 
-        summedPrice = new JLabel(sumDescription + cart.getAmount() + "Ft");
+        summedPrice = new JLabel(sumDescription + cart.getAmount() + " Ft");
         summedPrice.setFont(new Font(Font.SERIF, Font.BOLD, 18));
 
         checkout = new JButton(paymentDescription);
@@ -243,8 +243,8 @@ public class CartTable {
 
         addItems();
 
-        summedPrice.setText(sumDescription + cart.getAmount() + "Ft");
-        summedPrice.setFont(new Font("Serif", Font.BOLD, 18));
+        summedPrice.setText(sumDescription + cart.getAmount() + " Ft");
+        summedPrice.setFont(new Font(Font.SERIF, Font.BOLD, 18));
 
         cartItems.repaint();
     }

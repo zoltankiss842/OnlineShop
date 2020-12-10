@@ -10,15 +10,22 @@ import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
+/**
+ * Class for dealing with file writing and reading
+ */
 public class FileIO {
     
     private String line = "";
     private final String cvsSplitBy = ",";
     private final String txtSplit = "\t";
 
+    /**
+     * Reading a CVS file which contains the products
+     * @param productList       an array list to be read into
+     * @param filePath          location of the file
+     * @return                  an arraylist containing products
+     */
     public ArrayList<Product> readFromFile(ArrayList<Product> productList, String filePath){
         try{
             BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -51,6 +58,11 @@ public class FileIO {
         return productList;
     }
 
+    /**
+     * Reading a txt file which contains the counties
+     * @param filePath          location of the file
+     * @return                  an arraylist containing counties
+     */
     public ArrayList<County> readFromTxtFile(String filePath){
         ArrayList<County> counties = null;
         try{
@@ -83,6 +95,11 @@ public class FileIO {
         return counties;
     }
 
+    /**
+     * Reading a txt file which contains the cities
+     * @param list              a non-null county list
+     * @param filePath          location of the file
+     */
     public void readFromTxtFile(CountyList list, String filePath){
         try{
             BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -107,6 +124,11 @@ public class FileIO {
 
     }
 
+    /**
+     * Reading a txt file which contains countries
+     * @param filePath          location of the file
+     * @return                  array of string containing countries
+     */
     public String[] readFromTxtFileCountries(String filePath){
         String[] temp;
         ArrayList<String> countries = new ArrayList<>();
@@ -137,6 +159,12 @@ public class FileIO {
         return temp;
     }
 
+    /**
+     * Creating a receipt for purchase
+     * @param data      data from user input (name, address, bankcard, etc.)
+     * @param cart      products that were purchased
+     * @return          if the writing correctly terminated/happened
+     */
     public boolean writeTransactionToTxt(String[] data, Cart cart){
         try{
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -212,6 +240,11 @@ public class FileIO {
         return true;
     }
 
+    /**
+     * Creating a cart and wishlist txt
+     * @param list      list of products
+     * @return          if the writing correctly terminated/happened
+     */
     public boolean writeProductToTxt(ProductList list){
         try{
             String welcomeCartString = "Az Ön kosarának tartalma:\n";

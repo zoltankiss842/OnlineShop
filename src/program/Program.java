@@ -1,3 +1,5 @@
+package program;
+
 import entity.Cart;
 import entity.ProductList;
 import frame.MainFrame;
@@ -8,10 +10,11 @@ public class Program {
     MainFrame frame = new MainFrame();
     ProductList list = new ProductList("resources\\data\\MOCK_DATA.csv");
     Cart cart = new Cart();
-    PaymentFrame payment = new PaymentFrame();
 
     public void run(){
-        frame.init(list, cart);
+        if(list != null && !list.getProductList().isEmpty()){
+            frame.init(list, cart);
+        }
     }
 
 }

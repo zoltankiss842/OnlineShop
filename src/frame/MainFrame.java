@@ -19,7 +19,8 @@ public class MainFrame {
     public static final int FRAME_WIDTH = 1200;
     public static final int FRAME_HEIGHT = 700;
 
-    private final String version = "V1.2";
+
+    // Field for label and button desscriptions
     private final String frameTitle = "Online Shop";
     private final String productsTabTitle = "Termékek";
     private final String productsTabTitleDesc = "Raktárunkban megtalálható termékek";
@@ -28,42 +29,62 @@ public class MainFrame {
     private final String settingsTabTitle = "Beállítások";
     private final String settingsTabTitleDesc = "Felhasználói műveletek és beállítások";
 
+    // Fields for file paths
     private final String favIconPath = "resources\\images\\favicon.png";
     private final String productsIconPath = "resources\\images\\productsIcon.png";
     private final String cartIconPath = "resources\\images\\cartIcon.png";
     private final String settingsIconPath = "resources\\images\\settingsIcon.png";
 
+    // Fields for visual representation
     private JFrame window;
     private JTabbedPane tabPane;
     private JPanel listAndSearchHolder;
 
+    // Fields for frame
     private SearchPanel searchPanel;
     private ProductsPanel productsPanel;
     private CartTable cartTable;
 
+    // Fields for entities
     private ProductList list;
     private Cart cart;
 
     public MainFrame(){}
 
+    /**
+     * Initializes window t show
+     * @param list      list of products
+     * @param cart      items in cart
+     */
     public void init(ProductList list, Cart cart){
         this.list = list;
         this.cart = cart;
 
         createFrame();
         createTabPane();
-        createProductsTab(list);
-        createCartTab(list);
+        createProductsTab();
+        createCartTab();
 
         window.add(tabPane);
         window.setVisible(true);
     }
 
+    /**
+     * Creates a tab pane
+     */
     private void createTabPane() {
         tabPane = new JTabbedPane();
         tabPane.setTabPlacement(JTabbedPane.TOP);
 
-        tabPane.addChangeListener(new ChangeListener() {
+        tabPane.addChangeListener(createTabChangeListener());
+    }
+
+    /**
+     * If the tab is changes, refresh the current page
+     * @return      listener for tab
+     */
+    private ChangeListener createTabChangeListener(){
+        ChangeListener listener = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 if(e.getSource() instanceof JTabbedPane){
@@ -76,7 +97,9 @@ public class MainFrame {
                     }
                 }
             }
-        });
+        };
+
+        return listener;
     }
 
     /**
@@ -84,10 +107,10 @@ public class MainFrame {
      * Initializes: close operation, sizes, icon, position
      */
     private void createFrame(){
-        window = new JFrame(frameTitle + " " + version);        // creates Frame
+        window = new JFrame(frameTitle);        // creates Frame
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // What should the X do?
 
-        window.setSize(1200,700);
+        window.setSize(FRAME_WIDTH,FRAME_HEIGHT);
         window.setResizable(false);
 
         ImageIcon icon = new ImageIcon(favIconPath);
@@ -98,6 +121,11 @@ public class MainFrame {
         window.addWindowListener(createWindowListener());
     }
 
+    /**
+     * If the window is closed, it saves a txt file
+     * about the cart and the wishlist
+     * @return      listener for window
+     */
     private WindowListener createWindowListener() {
         WindowListener listener = new WindowListener() {
             @Override
@@ -144,37 +172,47 @@ public class MainFrame {
      * Creates the products tab, which displays
      * the available products in the shop
      */
-    private void createProductsTab(ProductList list){
+    private void createProductsTab(){
         ImageIcon icon = new ImageIcon(productsIconPath); // Sets icon
 
         initListAndSearchHolder();
-        createSearchPanel(list, window);
-        createProductsPanel(list);
+        createSearchPanel();
+        createProductsPanel();
 
 
         tabPane.addTab(productsTabTitle, icon, listAndSearchHolder, productsTabTitleDesc);
     }
 
+    /**
+     * Initializes a panel, which will hold
+     * the SearchPanel and ProductPanel
+     */
     private void initListAndSearchHolder() {
         listAndSearchHolder = new JPanel(new BorderLayout());
     }
 
-    private void createSearchPanel(ProductList list, JFrame frame) {
+    /**
+     * Creates SearchPanel
+     */
+    private void createSearchPanel() {
         searchPanel = new SearchPanel();
         productsPanel = new ProductsPanel();
-        listAndSearchHolder.add(searchPanel.createSearchPanel(list, frame, productsPanel), BorderLayout.PAGE_START);
+        listAndSearchHolder.add(searchPanel.createSearchPanel(list, window, productsPanel), BorderLayout.PAGE_START);
     }
 
     /**
      * Creates the panel, which makes the products
      * display as a list
      */
-    private void createProductsPanel(ProductList list){
+    private void createProductsPanel(){
         listAndSearchHolder.add(productsPanel.createProductsPanel(list), BorderLayout.CENTER);
 
     }
 
-    private void createCartTab(ProductList list) {
+    /**
+     * Creates CartTable
+     */
+    private void createCartTab() {
         ImageIcon icon = new ImageIcon(cartIconPath); // Sets icon
 
         cartTable = new CartTable();
