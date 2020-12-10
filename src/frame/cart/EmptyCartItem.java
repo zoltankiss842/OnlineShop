@@ -1,9 +1,11 @@
 package frame.cart;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
+/**
+ * This class is used when, there is no item in the cart
+ */
 public class EmptyCartItem {
 
     private final JPanel item;

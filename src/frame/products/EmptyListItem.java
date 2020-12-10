@@ -1,10 +1,12 @@
 package frame.products;
 
-import entity.Product;
-
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * When there is no product to show,
+ * this represents the message.
+ */
 public class EmptyListItem {
 
     private final JPanel item;

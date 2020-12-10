@@ -11,8 +11,17 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+/**
+ * The visual representation for a Product,
+ * this is where a product can be added to wishlist,
+ * cart or this is where it shows the results of a search.
+ */
 public class ListItem {
 
+    public static final int LIST_ITEM_WIDTH = 800;
+    public static final int LIST_ITEM_HEIGHT = 100;
+
+    // Fields for file paths and labels
     private final String emptyHeart = "resources\\images\\heart.png";
     private final String fullHeart = "resources\\images\\heartFull.png";
     private final String basketIcon = "resources\\images\\basket.png";
@@ -22,8 +31,8 @@ public class ListItem {
     private final String addToWishListDesc = "Kívánságlistánoz adás";
     private final String addToCartListDesc = "Kosárba helyezés";
 
+    // Fields for visual representation
     private JPanel item;
-
     private JLabel productName;
     private JLabel productCategory;
     private JPanel productAndCategoryHolder;
@@ -34,7 +43,9 @@ public class ListItem {
     private JPanel productAmount;
     private JSpinner format;
     private JLabel basketPicture;
+    private final Color backgroundColor;
 
+    // Fields for icons
     private BufferedImage heartEmpty;
     private BufferedImage heartFull;
     private BufferedImage basket;
@@ -44,22 +55,18 @@ public class ListItem {
     private Product product;
     private boolean isShown;
 
-    private final Color backgroundColor;
-
-    public ListItem(Product product, JPanel panel){
+    // Constructor with parameters
+    public ListItem(Product product){
         item = new JPanel(new GridLayout(1,6));
         this.product = product;
         this.isShown = true;
         this.backgroundColor = new Color(208, 220, 210);
 
-        item.setMinimumSize(new Dimension(800,100));
-        item.setMaximumSize(new Dimension(2000,100));
-        item.setPreferredSize(new Dimension(800, 100));
-
+        item.setPreferredSize(new Dimension(LIST_ITEM_WIDTH, LIST_ITEM_HEIGHT));
         item.setBackground(backgroundColor);
 
         readIcons();
-        createLabels(this.product);
+        createLabels();
 
         item.add(productAndCategoryHolder);
         item.add(productPrice);
@@ -67,6 +74,8 @@ public class ListItem {
         item.add(productIsOnWishlist);
         item.add(productAmount);
     }
+
+    // Getters and setters
 
     public boolean isShown() {
         return isShown;
@@ -84,6 +93,18 @@ public class ListItem {
         this.product = product;
     }
 
+    public JPanel getItem() {
+        return item;
+    }
+
+    public void setItem(JPanel item) {
+        this.item = item;
+    }
+
+    /**
+     * Method for reading in the icons,
+     * such as heart and basket
+     */
     private void readIcons() {
 
         try{
@@ -98,7 +119,10 @@ public class ListItem {
         }
     }
 
-    private void createLabels(Product product) {
+    /**
+     * Creating labels to add it to the item panel
+     */
+    private void createLabels() {
         productName = new JLabel(product.getProductName());
         productName.setFont(new Font(Font.SERIF, Font.BOLD, 24));
         productName.setToolTipText(product.getProductName());
@@ -128,10 +152,15 @@ public class ListItem {
         productAddToCart = setCartIcon();
         productAddToCart.setBackground(backgroundColor);
 
-        productAmount = setAmountFormatting();
+        productAmount = setAmountField();
     }
 
-    private JPanel setAmountFormatting() {
+    /**
+     * Creating the amount field, for how many
+     * items does the user want to add
+     * @return      panel containing the field
+     */
+    private JPanel setAmountField() {
         productAddToCart = setCartIcon();
 
         JPanel temp = new JPanel(new GridBagLayout());
@@ -139,7 +168,6 @@ public class ListItem {
 
         format = new JSpinner();
         format.setModel(createSpinnerModel());
-
 
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(5,5,5,20);
@@ -151,6 +179,10 @@ public class ListItem {
         return temp;
     }
 
+    /**
+     * Model for the amount spinner
+     * @return      model for spinner
+     */
     private SpinnerModel createSpinnerModel() {
         SpinnerNumberModel model = new SpinnerNumberModel();
         model.setMinimum(0);
@@ -160,13 +192,35 @@ public class ListItem {
         return model;
     }
 
+
+    /**
+     * Setting the proper cart icon for different
+     * actions
+     * @return      panel containing cart image and amount field
+     */
     private JPanel setCartIcon() {
         JPanel cartContainer = new JPanel();
         cartContainer.setBackground(backgroundColor);
 
         basketPicture = new JLabel(new ImageIcon(basket));
         basketPicture.setToolTipText(addToCartListDesc);
-        basketPicture.addMouseListener(new MouseListener() {
+        basketPicture.addMouseListener(createMouseListenerForBasket());
+
+        cartContainer.add(basketPicture);
+
+        return cartContainer;
+    }
+
+    /**
+     * When the user hover over the cart image
+     * the cursor changes to a hand. Also it changes the icon for the cart
+     * when the product has been successfully added to the cart. If the
+     * product is not in the warehouse it disables the spinner and
+     * allso changes the cart.
+     * @return      listener for mouse
+     */
+    private MouseListener createMouseListenerForBasket(){
+        MouseListener listener = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
@@ -232,21 +286,18 @@ public class ListItem {
                     basketPicture.setIcon(new ImageIcon(basket));
                 }
             }
-        });
+        };
 
-        cartContainer.add(basketPicture);
-
-        return cartContainer;
+        return listener;
     }
 
-    public JPanel getItem() {
-        return item;
-    }
-
-    public void setItem(JPanel item) {
-        this.item = item;
-    }
-
+    /**
+     * Setting the wish list icon, if its on the wishlist
+     * its a full red heart, else it is empty.
+     * @param onWishlist        if true, then red heart
+     *                          if false, it is an empty heart
+     * @return                  panel containing heart
+     */
     private JPanel setWishlistIcon(boolean onWishlist){
         JPanel heartContainer = new JPanel();
         heartContainer.setBackground(backgroundColor);
@@ -260,7 +311,24 @@ public class ListItem {
         }
 
         JLabel finalHeart = heart;
-        heart.addMouseListener(new MouseListener() {
+        heart.addMouseListener(createWishListMouseListener(finalHeart));
+
+        finalHeart.setToolTipText(addToWishListDesc);
+
+        heartContainer.add(finalHeart);
+
+        return heartContainer;
+    }
+
+    /**
+     * When the user hovers over the heart it changes the cursor,
+     * if clicks on it, the product will be added to the wishlist,
+     * and the heart icon changes.
+     * @param finalHeart        JLabel containing the heart
+     * @return                  listener for mouse
+     */
+    private MouseListener createWishListMouseListener(JLabel finalHeart){
+        MouseListener listener = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
             }
@@ -295,30 +363,28 @@ public class ListItem {
             public void mouseExited(MouseEvent e) {
                 finalHeart.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
-        });
+        };
 
-        finalHeart.setToolTipText(addToWishListDesc);
-
-        heartContainer.add(finalHeart);
-
-        return heartContainer;
+        return listener;
     }
 
-    private void updateWishlistIcon(){
-
-        productIsOnWishlist.remove(0);
-
-        productIsOnWishlist.add(setWishlistIcon(product.isOnWishList()));
-
-        productIsOnWishlist.revalidate();
-    }
-
+    /**
+     * Updating some labels and field after reload
+     */
     public void update(){
         updateWishlistIcon();
         updateAmountInCart();
         updateWareHouseQuantity();
         updateCartIcon();
         updateAmountSpinner();
+    }
+
+    private void updateWishlistIcon(){
+        productIsOnWishlist.remove(0);
+
+        productIsOnWishlist.add(setWishlistIcon(product.isOnWishList()));
+
+        productIsOnWishlist.revalidate();
     }
 
     private void updateAmountSpinner() {

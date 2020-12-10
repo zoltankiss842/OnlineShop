@@ -26,7 +26,7 @@ public class ProductsPanel {
 
         for(Product p : list.getProductList()){
             if(p.isShown()){
-                ListItem item = new ListItem(p, listAndSearchHolder);
+                ListItem item = new ListItem(p);
                 item.setShown(true);
                 listItemMap.put(p.hashCode(), item);
                 holder.add(item.getItem());
