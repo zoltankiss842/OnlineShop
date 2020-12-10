@@ -5,17 +5,29 @@ import frame.cart.CartItem;
 import java.util.ArrayList;
 import java.util.UUID;
 
+
+/**
+ * This entity represents what products the user
+ * would likely to buy. Each cart has a unique ID, a list of
+ * products, and has the price value of the whole cart.
+ */
 public class Cart {
 
+    private final double popularityDelta = 0.0005; // Modifier constant for popularity
+
+    // Fields of the Cart class
+    private String id;
     private ArrayList<CartItem> cart;
     private int amount;
-    private String id;
 
+    // Default constructor
     public Cart(){
+        id = UUID.randomUUID().toString();
         cart = new ArrayList<>();
         amount = 0;
-        id = UUID.randomUUID().toString();
     }
+
+    // Getters and Setters
 
     public ArrayList<CartItem> getCart() {
         return cart;
@@ -41,21 +53,27 @@ public class Cart {
         return this.cart.add(item);
     }
 
-    public void printItemsInCart(){
-        for(CartItem item : cart){
-            System.out.println(item.getProduct().toString());
-        }
-    }
 
+    /**
+     * This method generates a new ID for the cart.
+     */
     public void generateNewId() {
         this.id = UUID.randomUUID().toString();
     }
 
+    /**
+     * Going through the items and removing them
+     * from the cart, by setting them individually.
+     * Also deducting the purchased amount from
+     * the warehouse quantity and increasing the popularity.
+     */
     public void emptyCartAfterSuccessfulPurchase(){
         for(CartItem item : this.cart){
-            item.getProduct().setWarehouseQuantity(item.getProduct().getWarehouseQuantity()-item.getProduct().getAmountInCart());
-            item.getProduct().setInCart(false);
-            item.getProduct().setAmountInCart(0);
+            Product p = item.getProduct();
+            p.setWarehouseQuantity(p.getWarehouseQuantity()-p.getAmountInCart());
+            p.setInCart(false);
+            p.setAmountInCart(0);
+            p.setPopularity(p.getPopularity()+popularityDelta);
         }
     }
 }

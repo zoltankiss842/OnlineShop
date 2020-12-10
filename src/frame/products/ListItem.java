@@ -44,14 +44,19 @@ public class ListItem {
     private Product product;
     private boolean isShown;
 
+    private final Color backgroundColor;
+
     public ListItem(Product product, JPanel panel){
         item = new JPanel(new GridLayout(1,6));
         this.product = product;
         this.isShown = true;
+        this.backgroundColor = new Color(208, 220, 210);
 
         item.setMinimumSize(new Dimension(800,100));
         item.setMaximumSize(new Dimension(2000,100));
         item.setPreferredSize(new Dimension(800, 100));
+
+        item.setBackground(backgroundColor);
 
         readIcons();
         createLabels(this.product);
@@ -95,30 +100,33 @@ public class ListItem {
 
     private void createLabels(Product product) {
         productName = new JLabel(product.getProductName());
-        productName.setFont(new Font("Serif", Font.BOLD, 24));
+        productName.setFont(new Font(Font.SERIF, Font.BOLD, 24));
         productName.setToolTipText(product.getProductName());
         productName.setHorizontalAlignment(JLabel.CENTER);
 
         productCategory = new JLabel(product.getCategory());
-        productCategory.setFont(new Font("Serif", Font.ITALIC, 18));
+        productCategory.setFont(new Font(Font.SERIF, Font.ITALIC, 18));
         productCategory.setHorizontalAlignment(JLabel.CENTER);
 
         productAndCategoryHolder = new JPanel(new GridLayout(2,1));
         productAndCategoryHolder.add(productName);
         productAndCategoryHolder.add(productCategory);
+        productAndCategoryHolder.setBackground(backgroundColor);
 
-        productPrice = new JLabel(String.valueOf(product.getPrice()) + " Ft");
-        productPrice.setFont(new Font("Serif", Font.BOLD, 24));
+        productPrice = new JLabel(product.getPrice() + " Ft");
+        productPrice.setFont(new Font(Font.SERIF, Font.BOLD, 24));
         productPrice.setHorizontalAlignment(JLabel.CENTER);
 
-        productQuantity = new JLabel("Raktáron: " + String.valueOf(product.getWarehouseQuantity()));
-        productQuantity.setFont(new Font("Serif", Font.BOLD, 20));
+        productQuantity = new JLabel("Raktáron: " + product.getWarehouseQuantity());
+        productQuantity.setFont(new Font(Font.SERIF, Font.BOLD, 20));
         productQuantity.setHorizontalAlignment(JLabel.CENTER);
 
         productIsOnWishlist = setWishlistIcon(product.isOnWishList());
         productIsOnWishlist.setLayout(new GridBagLayout());
+        productIsOnWishlist.setBackground(backgroundColor);
 
         productAddToCart = setCartIcon();
+        productAddToCart.setBackground(backgroundColor);
 
         productAmount = setAmountFormatting();
     }
@@ -127,6 +135,7 @@ public class ListItem {
         productAddToCart = setCartIcon();
 
         JPanel temp = new JPanel(new GridBagLayout());
+        temp.setBackground(backgroundColor);
 
         format = new JSpinner();
         format.setModel(createSpinnerModel());
@@ -153,6 +162,8 @@ public class ListItem {
 
     private JPanel setCartIcon() {
         JPanel cartContainer = new JPanel();
+        cartContainer.setBackground(backgroundColor);
+
         basketPicture = new JLabel(new ImageIcon(basket));
         basketPicture.setToolTipText(addToCartListDesc);
         basketPicture.addMouseListener(new MouseListener() {
@@ -238,6 +249,7 @@ public class ListItem {
 
     private JPanel setWishlistIcon(boolean onWishlist){
         JPanel heartContainer = new JPanel();
+        heartContainer.setBackground(backgroundColor);
 
         JLabel heart = null;
         if(onWishlist){
@@ -310,16 +322,11 @@ public class ListItem {
     }
 
     private void updateAmountSpinner() {
-        if(product.getWarehouseQuantity() <= 0){
-            format.setEnabled(false);
-        }
-        else{
-            format.setEnabled(true);
-        }
+        format.setEnabled(product.getWarehouseQuantity() > 0);
     }
 
     private void updateWareHouseQuantity() {
-        productQuantity.setText("Raktáron: " + String.valueOf(product.getWarehouseQuantity()));
+        productQuantity.setText("Raktáron: " + product.getWarehouseQuantity());
     }
 
     private void updateAmountInCart() {

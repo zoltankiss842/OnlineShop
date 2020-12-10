@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class EmptyListItem {
 
-    private JPanel item;
+    private final JPanel item;
 
     public EmptyListItem(){
         item = new JPanel(new GridBagLayout());
@@ -17,7 +17,7 @@ public class EmptyListItem {
         item.setPreferredSize(new Dimension(800, 100));
 
         JLabel message = new JLabel("Sajnos nincs ilyen termék :(");
-        message.setFont(new Font("Serif", Font.BOLD, 24));
+        message.setFont(new Font(Font.SERIF, Font.BOLD, 24));
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;

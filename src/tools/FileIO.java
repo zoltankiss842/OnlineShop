@@ -16,8 +16,8 @@ import java.util.Date;
 public class FileIO {
     
     private String line = "";
-    private String cvsSplitBy = ",";
-    private String txtSplit = "\t";
+    private final String cvsSplitBy = ",";
+    private final String txtSplit = "\t";
 
     public ArrayList<Product> readFromFile(ArrayList<Product> productList, String filePath){
         try{
@@ -170,7 +170,7 @@ public class FileIO {
                     s = s + "X";
                 }
                 else{
-                    s = s + String.valueOf(data[16].charAt(i));
+                    s = s + data[16].charAt(i);
                 }
             }
 
@@ -190,7 +190,7 @@ public class FileIO {
             String formatString = "%-50s%s";
             writer.write("---- Rendelt termékek ---\n");
             for(CartItem item : cart.getCart()){
-                String out = String.format(formatString, item.getProduct().getProductName(), String.valueOf(item.getProduct().getAmountInCart()));
+                String out = String.format(formatString, item.getProduct().getProductName(), item.getProduct().getAmountInCart());
                 out = out + "db\t\t\t\t" + item.getProduct().getAmountInCart()*item.getProduct().getPrice() + "Ft\n";
                 writer.write(out);
             }
@@ -310,66 +310,4 @@ public class FileIO {
         return true;
     }
 
-    public boolean readCartFromTxt(ProductList list, String filePath){
-        try{
-
-            BufferedReader br = new BufferedReader(new FileReader(filePath));
-
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split("\t");
-                Product p = new Product(
-                        values[0],
-                        values[1],
-                        values[2],
-                        Integer.parseInt(values[3]),
-                        Integer.parseInt(values[4]));
-                for(Product product : list.getProductList()){
-                    if(product.equals(p) && p.getAmountInCart()>0){
-                        product.setInCart(true);
-                        product.setAmountInCart(p.getAmountInCart());
-                    }
-                }
-            }
-
-            br.close();
-        }
-        catch(Exception e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean readWishListFromTxt(ProductList list, String filePath){
-        ArrayList<Product> readInProducts;
-        try{
-            readInProducts = new ArrayList<>();
-
-            BufferedReader br = new BufferedReader(new FileReader(filePath));
-
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split("\t");
-                Product p = new Product(
-                        values[0],
-                        values[1],
-                        values[2],
-                        Integer.parseInt(values[3]),
-                        Integer.parseInt(values[4]));
-                for(Product product : list.getProductList()){
-                    if(product.equals(p)){
-                        product.setOnWishList(true);
-                    }
-                }
-            }
-
-            br.close();
-        }
-        catch(Exception e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-
-        return true;
-    }
 }

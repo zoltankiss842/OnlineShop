@@ -8,6 +8,7 @@ import tools.sort.PriceAsc;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -48,26 +49,29 @@ public class SearchPanel {
     private PriceAsc priceAsc;
     private Popularity popularity;
 
+    private Color backgroundColor;
+
     public JPanel createSearchPanel(ProductList list, JFrame frame, ProductsPanel panel){
         this.list = list;
         this.frame = frame;
         this.productsPanel = panel;
+        this.backgroundColor = new Color(171, 196, 187);
 
         alphaAsc = new AlphabeticalAsc();
         priceAsc = new PriceAsc();
         popularity = new Popularity();
 
         listAndSearchHolder = new JPanel(new BorderLayout());
-        listAndSearchHolder.setBorder(new LineBorder(Color.RED,4));
         searchPanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(5,5,5,5);
 
 
-        searchPanel.setBorder(new LineBorder(Color.MAGENTA, 4));
+        searchPanel.setBorder(new MatteBorder(0,0,2,0,Color.BLACK));
 
-        searchPanel.setBackground(new Color(146, 180, 167));
+        searchPanel.setBackground(backgroundColor);
+
 
         searchPanel.setMinimumSize(new Dimension(0,70));
         searchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,70));
@@ -198,6 +202,7 @@ public class SearchPanel {
 
     private void createInfoPanel() {
         wishToCartPanel = new JPanel(new GridBagLayout());
+        wishToCartPanel.setBackground(backgroundColor);
         GridBagConstraints c = new GridBagConstraints();
 
         wishToCart = new JButton(wishToCartDesc);

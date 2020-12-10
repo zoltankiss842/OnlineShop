@@ -48,11 +48,7 @@ public class StringManipulation {
         Pattern pattern = Pattern.compile(lettersAndDigitsRegex);
         Matcher matcher = pattern.matcher(s);
 
-        if(matcher.find()){
-            return false;
-        }
-
-        return true;
+        return !matcher.find();
     }
 
     public boolean isValidPhoneNumber(String s, boolean acceptEmptyString){
@@ -63,11 +59,7 @@ public class StringManipulation {
         Pattern pattern = Pattern.compile(phoneNumberRegex);
         Matcher matcher = pattern.matcher(s);
 
-        if(matcher.find()){
-            return false;
-        }
-
-        return true;
+        return !matcher.find();
     }
 
     public boolean isValidEmail(String s, boolean acceptEmptyString){
@@ -78,11 +70,7 @@ public class StringManipulation {
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(s);
 
-        if(matcher.find()){
-            return true;
-        }
-
-        return false;
+        return matcher.find();
     }
 
     public boolean isValidHouseNumber(String s, boolean acceptEmptyString){
@@ -93,11 +81,7 @@ public class StringManipulation {
         Pattern pattern = Pattern.compile(houseNumberRegex);
         Matcher matcher = pattern.matcher(s);
 
-        if(matcher.find()){
-            return false;
-        }
-
-        return true;
+        return !matcher.find();
     }
 
     public boolean isValidCardNumber(String s, boolean acceptEmptyString){
@@ -112,11 +96,7 @@ public class StringManipulation {
         Pattern pattern = Pattern.compile(cardNumberRegex);
         Matcher matcher = pattern.matcher(s);
 
-        if(matcher.find()){
-            return false;
-        }
-
-        return true;
+        return !matcher.find();
     }
 
     public boolean isValidPostCode(String s, boolean acceptEmptyString){
@@ -131,11 +111,7 @@ public class StringManipulation {
         Pattern pattern = Pattern.compile(cardNumberRegex);
         Matcher matcher = pattern.matcher(s);
 
-        if(matcher.find()){
-            return false;
-        }
-
-        return true;
+        return !matcher.find();
     }
 
     public String sanitizeString(String s){

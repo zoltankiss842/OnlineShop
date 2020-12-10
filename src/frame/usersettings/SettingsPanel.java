@@ -35,8 +35,8 @@ public class SettingsPanel {
     private JButton saveCard;
     private JButton loadCard;
 
-    private Cart cart;
-    private ProductList list;
+    private final Cart cart;
+    private final ProductList list;
 
     public SettingsPanel(Cart cart, ProductList list){
         this.cart = cart;

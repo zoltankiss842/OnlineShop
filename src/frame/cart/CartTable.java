@@ -3,44 +3,53 @@ package frame.cart;
 import entity.Cart;
 import entity.Product;
 import entity.ProductList;
+import frame.MainFrame;
 import frame.payment.PaymentFrame;
-import frame.products.EmptyListItem;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CartTable {
 
+    public final static int MIN_ITEM_WIDTH = 300;
+    public final static int PREFERRED_ITEM_WIDTH = 300;
+    public final static int MAX_ITEM_WIDTH = 2000;
+    public final static int ITEM_HEIGHT = 60;
+    public final static int SUMMARY_WIDTH = 300;
+    public final static int PADDING_BETWEEN_CART_ITEMS = 10;
+
+    // Fields for the description of labels and buttons
     private final String sumDescription = "Fizetendő összeg: ";
     private final String addAllToWishlistDescription = "Mindent a kívánságlistára";
     private final String paymentDescription = "Fizetés";
     private final String removeAllFromCartDesc = "Kosár törlése";
 
-    private double amountToPay = 0;
-
-    private JScrollPane scrollPane;
-    private Box holder;
-    private JTabbedPane tab;
-
-    private JPanel cartTableHolder;
-    private JPanel summaryHolder;
-
+    // Fields for visual representation
+    private JPanel cartTableHolder;                 // Holds the list of items in cart and the summary
+    private JScrollPane cartItems;                  // Holds the list of items
+    private Box cartItemHolder;
+    private JPanel summaryHolder;                   // Holds the summary
     private JLabel summedPrice;
     private JButton checkout;
     private JButton putEverythingOnWishlist;
     private JButton removeAllFromCart;
+    private Color backgroundColor;
 
     private Cart cart;
-    private ProductList productList;
+    private ProductList list;
     private JFrame frame;
 
-    // TODO - no more than available quantity
-
-    public JPanel createCartTable(ProductList list, JTabbedPane tab, JFrame frame){
-        this.tab = tab;
+    /**
+     * Creates a panel which be added to the mainframe's tabbed pane.
+     * This panel holds the items in the cart and the summary of the cart.
+     *
+     * @param list          ProductList instance containing every products
+     * @param frame         Instance of the mainframe, to disable when payment is started
+     * @return              JPanel with the added components
+     */
+    public JPanel createCartTable(ProductList list, JFrame frame){
         this.frame = frame;
         cartTableHolder = new JPanel(new BorderLayout());
 
@@ -55,8 +64,7 @@ public class CartTable {
         summaryHolder = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
-        summaryHolder.setBorder(new LineBorder(Color.pink, 4));
-        summaryHolder.setPreferredSize(new Dimension(300, tab.getHeight()));
+        summaryHolder.setPreferredSize(new Dimension(300, MainFrame.FRAME_HEIGHT));
 
         summedPrice = new JLabel(sumDescription + cart.getAmount() + "Ft");
         summedPrice.setFont(new Font("Serif", Font.BOLD, 18));
@@ -141,40 +149,38 @@ public class CartTable {
     }
 
     private void createCart(ProductList list) {
-        this.productList = list;
+        this.list = list;
         cart = new Cart();
 
-        holder = Box.createVerticalBox();
+        cartItemHolder = Box.createVerticalBox();
 
         for(Product p : list.getProductList()){
-            CartItem item = new CartItem(p, scrollPane, this);
+            CartItem item = new CartItem(p, this);
             if(p.isInCart()){
                 cart.setAmount(cart.getAmount()+(p.getPrice() * p.getAmountInCart()));
                 cart.addItemToCart(item);
-                holder.add(item.getItem());
-                holder.add(Box.createVerticalStrut(10));
+                cartItemHolder.add(item.getItem());
+                cartItemHolder.add(Box.createVerticalStrut(10));
             }
 
         }
 
-        holder.add(Box.createVerticalGlue());
+        cartItemHolder.add(Box.createVerticalGlue());
 
-        scrollPane = new JScrollPane(holder);
+        cartItems = new JScrollPane(cartItemHolder);
 
-        scrollPane.setMinimumSize(new Dimension(800,200));
-        scrollPane.setMaximumSize(new Dimension(2000,200));
-        scrollPane.setPreferredSize(new Dimension(800, 200));
+        cartItems.setMinimumSize(new Dimension(800,200));
+        cartItems.setMaximumSize(new Dimension(2000,200));
+        cartItems.setPreferredSize(new Dimension(800, 200));
 
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        scrollPane.setHorizontalScrollBar(null);
+        cartItems.getVerticalScrollBar().setUnitIncrement(16);
+        cartItems.setHorizontalScrollBar(null);
 
-        scrollPane.setBorder(new LineBorder(Color.ORANGE, 4));
-
-        cartTableHolder.add(scrollPane, BorderLayout.CENTER);
+        cartTableHolder.add(cartItems, BorderLayout.CENTER);
     }
 
     public JScrollPane updateCartTable(ProductList list, JFrame frame){
-        holder.removeAll();
+        cartItemHolder.removeAll();
         cart.getCart().clear();
 
         cart.setAmount(0);
@@ -182,12 +188,12 @@ public class CartTable {
         int numberOfItems = 0;
 
         for(Product p : list.getProductList()){
-            CartItem item = new CartItem(p, scrollPane, this);
+            CartItem item = new CartItem(p, this);
             if(p.isInCart()){
                 cart.setAmount(cart.getAmount()+(p.getPrice() * p.getAmountInCart()));
                 cart.addItemToCart(item);
-                holder.add(item.getItem());
-                holder.add(Box.createVerticalStrut(10));
+                cartItemHolder.add(item.getItem());
+                cartItemHolder.add(Box.createVerticalStrut(10));
                 numberOfItems++;
             }
 
@@ -195,7 +201,7 @@ public class CartTable {
 
         if(numberOfItems == 0){
             EmptyCartItem empty = new EmptyCartItem();
-            holder.add(empty.getItem());
+            cartItemHolder.add(empty.getItem());
         }
 
         summaryHolder.remove(0);
@@ -205,31 +211,31 @@ public class CartTable {
 
         summaryHolder.add(summedPrice, 0);
 
-        holder.add(Box.createVerticalGlue());
+        cartItemHolder.add(Box.createVerticalGlue());
 
-        holder.revalidate();
+        cartItemHolder.revalidate();
         frame.revalidate();
-        scrollPane.repaint();
-        scrollPane.revalidate();
+        cartItems.repaint();
+        cartItems.revalidate();
 
-        return scrollPane;
+        return cartItems;
     }
 
     public JScrollPane updateCartTable(){
-        holder.removeAll();
+        cartItemHolder.removeAll();
         cart.getCart().clear();
 
         cart.setAmount(0);
 
         int numberOfItems = 0;
 
-        for(Product p : productList.getProductList()){
-            CartItem item = new CartItem(p, scrollPane, this);
+        for(Product p : list.getProductList()){
+            CartItem item = new CartItem(p, this);
             if(p.isInCart()){
                 cart.setAmount(cart.getAmount()+(p.getPrice() * p.getAmountInCart()));
                 cart.addItemToCart(item);
-                holder.add(item.getItem());
-                holder.add(Box.createVerticalStrut(10));
+                cartItemHolder.add(item.getItem());
+                cartItemHolder.add(Box.createVerticalStrut(10));
                 numberOfItems++;
             }
 
@@ -237,21 +243,21 @@ public class CartTable {
 
         if(numberOfItems == 0){
             EmptyCartItem empty = new EmptyCartItem();
-            holder.add(empty.getItem());
+            cartItemHolder.add(empty.getItem());
         }
 
-        holder.add(Box.createVerticalGlue());
+        cartItemHolder.add(Box.createVerticalGlue());
 
         summedPrice.setText(sumDescription + cart.getAmount() + "Ft");
         summedPrice.setFont(new Font("Serif", Font.BOLD, 18));
 
-        holder.revalidate();
-        scrollPane.repaint();
-        scrollPane.revalidate();
+        cartItemHolder.revalidate();
+        cartItems.repaint();
+        cartItems.revalidate();
 
         cartTableHolder.revalidate();
 
-        return scrollPane;
+        return cartItems;
     }
 
 

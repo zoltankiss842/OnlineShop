@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="OnlineShop">
+    <output-path>$PROJECT_DIR$/out/artifacts/OnlineShop</output-path>
+    <root id="archive" name="OnlineShop.jar">
+      <element id="archive" name="OnlineShop.jar">
+        <element id="module-output" name="OnlineShop" />
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -7,30 +7,49 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This entity represents a list of products.
+ *
+ * @see Product
+ */
 public class ProductList {
 
-    private ArrayList<Product> productList;
-    private ArrayList<String> categoryList;
+    // Fields for ProductList class
+    private final ArrayList<Product> productList;       // The list of products
+    private ArrayList<String> categoryList;             // The list of the products' categories
 
+    // Constructor with parameters
+    public ProductList(ArrayList<Product> productList, ArrayList<String> categoryList) {
+        this.productList = productList;
+        this.categoryList = categoryList;
+    }
+
+    // Constructor with file path
     public ProductList(String filePath){
-        FileIO io = new FileIO();
         productList = new ArrayList<>();
-        io.readFromFile(productList, filePath);
-        //io.readWishListFromTxt(this, )
+        new FileIO().readFromFile(productList, filePath);
         updateCategoryList();
     }
 
     private void updateCategoryList(){
-        Set<String> categories = new HashSet<>();
-        for(Product p : productList){
-            categories.add(p.getCategory());
+        if(productList != null && !productList.isEmpty()){
+            Set<String> categories = new HashSet<>();   // Set allows us to have only one instance of everything, that's what sets do
+            for(Product p : productList){
+                categories.add(p.getCategory());
+            }
+
+            categoryList = new ArrayList<>();
+            categoryList.addAll(categories);            // Converting the set into an arraylist
+
+            Collections.sort(categoryList);             // Sorting the arraylist alphabetically
+        }
+        else{
+            categoryList = new ArrayList<>();
         }
 
-        categoryList = new ArrayList<>();
-        categoryList.addAll(categories);
-
-        Collections.sort(categoryList);
     }
+
+    // Setters
 
     public ArrayList<Product> getProductList() {
         return productList;
@@ -38,34 +57,6 @@ public class ProductList {
 
     public ArrayList<String> getCategoryList() {
         return categoryList;
-    }
-
-    public void printProductList(){
-        printOutProductList();
-    }
-
-    public void printCategoryList(){
-        printOutCategoryList();
-    }
-
-    private void printOutProductList(){
-        for(Product p : productList){
-            System.out.println(p.toString());
-        }
-    }
-
-    private void printOutCategoryList(){
-        for(String c : categoryList){
-            System.out.println(c);
-        }
-    }
-
-    public void printIfOnWishList(){
-        for(Product p : productList){
-            if(p.isOnWishList()){
-                System.out.println(p.toString());
-            }
-        }
     }
 
 }

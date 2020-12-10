@@ -5,19 +5,27 @@ import tools.StringManipulation;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * This entity represents a product which a user could
+ * browse, buy or add to their wishlist.
+ */
 public class Product {
 
-    private String productName;
-    private String sanitizedProductName;
-    private String category;
-    private int price;
-    private int warehouseQuantity;
-    private boolean onWishList;
-    private boolean inCart;
-    private int amountInCart;
-    private boolean isShown;
-    private double popularity;
+    public static final int BUY_LIMIT = 999;
 
+    // Fields for Product class
+    private String productName;             // Name of the product, from the file
+    private String sanitizedProductName;    // Name of the product, just containing only words and numbers (needed for alphabetical sorting)
+    private String category;                // Category of the product
+    private int price;                      // Price of the product
+    private int warehouseQuantity;          // How many available in the warehouse
+    private boolean onWishList;             // If the product is on the users wishlist
+    private boolean inCart;                 // If the product has been placed in the cart
+    private int amountInCart;               // How many is in the cart
+    private boolean isShown;                // If the product is shown on the screen (needed for sorting and searching)
+    private double popularity;              // How popular the product is (random values for every run)
+
+    // Constructor for the Product (used during reading in)
     public Product(String productName, String category, int price, int warehouseQuantity) {
         Random rnd = new Random();
         this.productName = productName;
@@ -32,30 +40,7 @@ public class Product {
         this.popularity = rnd.nextDouble();
     }
 
-    public Product(String productName,
-                   String sanitizedProductName,
-                   String category,
-                   int price,
-                   int amountInCart) {
-        Random rnd = new Random();
-        this.productName = productName;
-        this.sanitizedProductName = sanitizedProductName;
-        this.category = category;
-        this.price = price;
-        this.warehouseQuantity = 0;
-        this.onWishList = false;
-        this.amountInCart = amountInCart;
-
-        if(this.amountInCart>0){
-            this.inCart = true;
-        }
-        else {
-            this.inCart = false;
-        }
-
-        this.isShown = true;
-        this.popularity = rnd.nextDouble();
-    }
+    // Getters and Setters
 
     public String getProductName() {
         return productName;
@@ -153,17 +138,28 @@ public class Product {
                 '}';
     }
 
+    /**
+     * For comparing 2 instances of Product entities.
+     * IF the specified values are the same, then they are the same.
+     * @param toBeCompared      Product to be compared
+     * @return                  true, if they are the same
+     *                          false, if the are not the same
+     */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
+    public boolean equals(Object toBeCompared) {
+        if (this == toBeCompared) return true;
+        if (toBeCompared == null || getClass() != toBeCompared.getClass()) return false;
+        Product product = (Product) toBeCompared;
         return price == product.price &&
                 productName.equals(product.productName) &&
                 sanitizedProductName.equals(product.sanitizedProductName) &&
                 category.equals(product.category);
     }
 
+    /**
+     * Generates a hashcode for this Product instance
+     * @return      calculated hash value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(productName, sanitizedProductName, category, price);

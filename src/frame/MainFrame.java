@@ -1,25 +1,23 @@
 package frame;
 
 import entity.Cart;
-import entity.Product;
 import entity.ProductList;
 import frame.cart.CartTable;
 import frame.products.ProductsPanel;
 import frame.products.SearchPanel;
-import frame.usersettings.SettingsPanel;
 import tools.FileIO;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class MainFrame {
+
+    public static final int FRAME_WIDTH = 1200;
+    public static final int FRAME_HEIGHT = 700;
 
     private final String version = "V1.2";
     private final String frameTitle = "Online Shop";
@@ -92,31 +90,6 @@ public class MainFrame {
         window.setSize(1200,700);
         window.setResizable(false);
 
-        window.setBackground(new Color(129,102,122));
-
-        window.addComponentListener(new ComponentListener() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                System.out.println("Width: " + window.getWidth() + ", Height: " + window.getHeight());
-            }
-
-            @Override
-            public void componentMoved(ComponentEvent e) {
-
-            }
-
-            @Override
-            public void componentShown(ComponentEvent e) {
-
-            }
-
-            @Override
-            public void componentHidden(ComponentEvent e) {
-
-            }
-        });
-
-
         ImageIcon icon = new ImageIcon(favIconPath);
         window.setIconImage(icon.getImage());                   // Sets icon
 
@@ -184,7 +157,6 @@ public class MainFrame {
 
     private void initListAndSearchHolder() {
         listAndSearchHolder = new JPanel(new BorderLayout());
-        listAndSearchHolder.setBorder(new LineBorder(Color.RED,4));
     }
 
     private void createSearchPanel(ProductList list, JFrame frame) {
@@ -207,6 +179,6 @@ public class MainFrame {
 
         cartTable = new CartTable();
 
-        tabPane.addTab(cartTabTitle, icon, cartTable.createCartTable(list, tabPane, window), cartTabTitleDesc);
+        tabPane.addTab(cartTabTitle, icon, cartTable.createCartTable(list, window), cartTabTitleDesc);
     }
 }

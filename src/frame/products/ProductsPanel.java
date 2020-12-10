@@ -4,7 +4,6 @@ import entity.Product;
 import entity.ProductList;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.HashMap;
 
@@ -31,7 +30,7 @@ public class ProductsPanel {
                 item.setShown(true);
                 listItemMap.put(p.hashCode(), item);
                 holder.add(item.getItem());
-                holder.add(Box.createVerticalStrut(10));
+                holder.add(Box.createVerticalStrut(5));
                 numberOfItems++;
             }
 
@@ -51,7 +50,6 @@ public class ProductsPanel {
         listOfProducts.setMinimumSize(new Dimension(0,listAndSearchHolder.getHeight()));
         listOfProducts.setMaximumSize(new Dimension(Integer.MAX_VALUE,listAndSearchHolder.getHeight()));
         listOfProducts.setPreferredSize(new Dimension(listAndSearchHolder.getWidth(), listAndSearchHolder.getHeight()));
-        listOfProducts.setBorder(new LineBorder(Color.ORANGE, 4));
 
         return listOfProducts;
     }
@@ -66,7 +64,7 @@ public class ProductsPanel {
                 listItemMap.get(p.hashCode()).setShown(true);
                 listItemMap.get(p.hashCode()).update();
                 holder.add(listItemMap.get(p.hashCode()).getItem());
-                holder.add(Box.createVerticalStrut(10));
+                holder.add(Box.createVerticalStrut(5));
                 numberOfItems++;
             }
             else{
