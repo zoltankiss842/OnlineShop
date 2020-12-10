@@ -53,7 +53,6 @@ public class Cart {
         return this.cart.add(item);
     }
 
-
     /**
      * This method generates a new ID for the cart.
      */

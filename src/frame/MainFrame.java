@@ -69,7 +69,7 @@ public class MainFrame {
                 if(e.getSource() instanceof JTabbedPane){
                     JTabbedPane pane = (JTabbedPane) e.getSource();
                     if(pane.getSelectedIndex() == 1){
-                        cartTable.updateCartTable(list, window);
+                        cartTable.updateCartTable();
                     }
                     else if(pane.getSelectedIndex() == 0){
                         productsPanel.updateProductPanel(list, window);

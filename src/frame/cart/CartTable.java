@@ -51,23 +51,85 @@ public class CartTable {
      */
     public JPanel createCartTable(ProductList list, JFrame frame){
         this.frame = frame;
+        this.list = list;
+        this.backgroundColor = new Color(171, 196, 187);
         cartTableHolder = new JPanel(new BorderLayout());
 
-        createCart(list);  //left side
+        createCart();
 
-        createSummary(); // right side
+        createSummary();
 
         return cartTableHolder;
     }
 
+
+    /**
+     * Creates cart by adding items to it
+     */
+    private void createCart() {
+        cart = new Cart();
+        cartItemHolder = Box.createVerticalBox();
+
+        addItems();
+
+        setUpScrollPane();
+
+        cartTableHolder.add(cartItems, BorderLayout.CENTER);
+    }
+
+    /**
+     * Adding items to the cart.
+     * If no item is present, an empty
+     * message will be displayed.
+     */
+    private void addItems() {
+        int numberOfItems = 0;
+
+        for(Product p : list.getProductList()){
+            if(p.isInCart()){
+                CartItem item = new CartItem(p, this);
+                cart.setAmount(cart.getAmount()+(p.getPrice() * p.getAmountInCart()));
+                cart.addItemToCart(item);
+                cartItemHolder.add(item.getItem());
+                cartItemHolder.add(Box.createVerticalStrut(PADDING_BETWEEN_CART_ITEMS));
+                numberOfItems++;
+            }
+
+        }
+
+        if(numberOfItems == 0){
+            cartItemHolder.removeAll();
+            EmptyCartItem empty = new EmptyCartItem();
+            cartItemHolder.add(empty.getItem());
+        }
+
+        cartItemHolder.add(Box.createVerticalGlue());
+    }
+
+    /**
+     * Sets up scrollpane for the cart items
+     */
+    private void setUpScrollPane() {
+        cartItems = new JScrollPane(cartItemHolder);
+
+        cartItems.getVerticalScrollBar().setUnitIncrement(16);
+        cartItems.setHorizontalScrollBar(null);
+    }
+
+    /**
+     * Creates the summary, which is on the right side of
+     * the panel. It is for displaying the amount which
+     * to be paid and other useful buttons.
+     */
     private void createSummary() {
         summaryHolder = new JPanel(new GridBagLayout());
+        summaryHolder.setBackground(backgroundColor);
         GridBagConstraints c = new GridBagConstraints();
 
-        summaryHolder.setPreferredSize(new Dimension(300, MainFrame.FRAME_HEIGHT));
+        summaryHolder.setPreferredSize(new Dimension(SUMMARY_WIDTH, MainFrame.FRAME_HEIGHT));
 
         summedPrice = new JLabel(sumDescription + cart.getAmount() + "Ft");
-        summedPrice.setFont(new Font("Serif", Font.BOLD, 18));
+        summedPrice.setFont(new Font(Font.SERIF, Font.BOLD, 18));
 
         checkout = new JButton(paymentDescription);
         checkout.addActionListener(setCheckoutActionListener(this));
@@ -99,13 +161,18 @@ public class CartTable {
         cartTableHolder.add(summaryHolder, BorderLayout.LINE_END);
     }
 
+    /**
+     * When the user clicks on the button, it removes
+     * every item from the cart.
+     * @return      action for the button
+     */
     private ActionListener createRemoveAllFromCartActionListener() {
         ActionListener action = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for(CartItem item : cart.getCart()){
-                    item.getProduct().setInCart(false);
-                    item.getProduct().setAmountInCart(0);
+                for(Product item : list.getProductList()){
+                    item.setInCart(false);
+                    item.setAmountInCart(0);
                 }
 
                 updateCartTable();
@@ -115,6 +182,16 @@ public class CartTable {
         return action;
     }
 
+    /**
+     * When the user clicks on the button, it creates a PaymentFrame
+     * where the payment can be made.
+     *
+     * If, the cart is empty, nothing will happen.
+     *
+     * @see PaymentFrame
+     * @param cartTable     for updating the cart after successful payment
+     * @return              action for button
+     */
     private ActionListener setCheckoutActionListener(CartTable cartTable) {
         ActionListener action = new ActionListener() {
             @Override
@@ -131,6 +208,12 @@ public class CartTable {
         return action;
     }
 
+    /**
+     * When the user clicks the button, it sets every product
+     * to be on the wishlist.
+     *
+     * @return      action for the button
+     */
     private ActionListener setPutEverytingOnWishlistActionListener() {
         ActionListener action = new ActionListener() {
             @Override
@@ -148,116 +231,22 @@ public class CartTable {
         return action;
     }
 
-    private void createCart(ProductList list) {
-        this.list = list;
-        cart = new Cart();
-
-        cartItemHolder = Box.createVerticalBox();
-
-        for(Product p : list.getProductList()){
-            CartItem item = new CartItem(p, this);
-            if(p.isInCart()){
-                cart.setAmount(cart.getAmount()+(p.getPrice() * p.getAmountInCart()));
-                cart.addItemToCart(item);
-                cartItemHolder.add(item.getItem());
-                cartItemHolder.add(Box.createVerticalStrut(10));
-            }
-
-        }
-
-        cartItemHolder.add(Box.createVerticalGlue());
-
-        cartItems = new JScrollPane(cartItemHolder);
-
-        cartItems.setMinimumSize(new Dimension(800,200));
-        cartItems.setMaximumSize(new Dimension(2000,200));
-        cartItems.setPreferredSize(new Dimension(800, 200));
-
-        cartItems.getVerticalScrollBar().setUnitIncrement(16);
-        cartItems.setHorizontalScrollBar(null);
-
-        cartTableHolder.add(cartItems, BorderLayout.CENTER);
-    }
-
-    public JScrollPane updateCartTable(ProductList list, JFrame frame){
+    /**
+     * Updates the cart and displays a refreshed
+     * batch of items.
+     */
+    public void updateCartTable(){
         cartItemHolder.removeAll();
         cart.getCart().clear();
 
         cart.setAmount(0);
 
-        int numberOfItems = 0;
-
-        for(Product p : list.getProductList()){
-            CartItem item = new CartItem(p, this);
-            if(p.isInCart()){
-                cart.setAmount(cart.getAmount()+(p.getPrice() * p.getAmountInCart()));
-                cart.addItemToCart(item);
-                cartItemHolder.add(item.getItem());
-                cartItemHolder.add(Box.createVerticalStrut(10));
-                numberOfItems++;
-            }
-
-        }
-
-        if(numberOfItems == 0){
-            EmptyCartItem empty = new EmptyCartItem();
-            cartItemHolder.add(empty.getItem());
-        }
-
-        summaryHolder.remove(0);
-        summedPrice.removeAll();
-        summedPrice = new JLabel(sumDescription + cart.getAmount() + "Ft");
-        summedPrice.setFont(new Font("Serif", Font.BOLD, 18));
-
-        summaryHolder.add(summedPrice, 0);
-
-        cartItemHolder.add(Box.createVerticalGlue());
-
-        cartItemHolder.revalidate();
-        frame.revalidate();
-        cartItems.repaint();
-        cartItems.revalidate();
-
-        return cartItems;
-    }
-
-    public JScrollPane updateCartTable(){
-        cartItemHolder.removeAll();
-        cart.getCart().clear();
-
-        cart.setAmount(0);
-
-        int numberOfItems = 0;
-
-        for(Product p : list.getProductList()){
-            CartItem item = new CartItem(p, this);
-            if(p.isInCart()){
-                cart.setAmount(cart.getAmount()+(p.getPrice() * p.getAmountInCart()));
-                cart.addItemToCart(item);
-                cartItemHolder.add(item.getItem());
-                cartItemHolder.add(Box.createVerticalStrut(10));
-                numberOfItems++;
-            }
-
-        }
-
-        if(numberOfItems == 0){
-            EmptyCartItem empty = new EmptyCartItem();
-            cartItemHolder.add(empty.getItem());
-        }
-
-        cartItemHolder.add(Box.createVerticalGlue());
+        addItems();
 
         summedPrice.setText(sumDescription + cart.getAmount() + "Ft");
         summedPrice.setFont(new Font("Serif", Font.BOLD, 18));
 
-        cartItemHolder.revalidate();
         cartItems.repaint();
-        cartItems.revalidate();
-
-        cartTableHolder.revalidate();
-
-        return cartItems;
     }
 
 
