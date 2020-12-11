@@ -190,6 +190,7 @@ public class ListItem {
         model.setMinimum(0);
         model.setStepSize(1);
         model.setValue(product.getAmountInCart());
+        model.setMaximum(product.getWarehouseQuantity());
 
         return model;
     }
@@ -246,9 +247,15 @@ public class ListItem {
                     ex.printStackTrace();
                 }
 
-                if(amount == null ||  amount > 999){
+                if(amount == null ||  amount > Product.BUY_LIMIT){
                     JOptionPane.showMessageDialog(item,
-                            "Hibás érték! Az értéknek 0 és 999 között kell lennie.",
+                            "Hibás érték! Az értéknek 0 és 999 között kell lennie ",
+                            "Hibás kosár érték",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                else if(amount > product.getWarehouseQuantity()){
+                    JOptionPane.showMessageDialog(item,
+                            "Hibás érték! Az érték nem lehet több, mint a raktári érték",
                             "Hibás kosár érték",
                             JOptionPane.ERROR_MESSAGE);
                 }

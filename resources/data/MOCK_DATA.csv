@@ -1,61 +1,62 @@
-productName,category,price,warehouseQuantity
-Lemonade - Natural 591 Ml,Computers,6425.58,0
-Oil - Truffle White,Beauty,21616.13,1
-Sauce - Demi Glace,Kids,11020.59,1982
-Coffee Beans - Chocolate,Movies,33238.05,2742
-Eggplant - Regular,Shoes,10673.11,864
-Soup - Campbells - Tomato,Jewelery,39150.0,3430
-Bread - Roll Whole Wheat,Health,24260.77,1561
-Chocolate - Milk,Baby,15250.14,1332
-Wine - Semi Dry Riesling Vineland,Jewelery,5399.65,559
-Chicken - Diced Cooked,Movies,26485.59,4184
-Arizona - Green Tea,Music,22613.82,3648
-Baking Soda,Clothing,17881.06,3616
-Cheese - Shred Cheddar / Mozza,Baby,32735.22,3160
-Mushroom - Chanterelle Dry,Baby,39360.46,4015
-Bar Mix - Lemon,Outdoors,36373.94,3373
-Muffin Puck Ww Carrot,Toys,39812.69,1588
-Juice - Apple Cider,Books,2222.09,4817
-Melon - Watermelon Seedless,Shoes,9433.17,4422
-Potatoes - Yukon Gold 80 Ct,Kids,38083.98,463
-Wine - Placido Pinot Grigo,Computers,14536.4,4374
-Fenngreek Seed,Beauty,29286.11,2292
-Chicken - Whole Fryers,Kids,23135.83,3794
-Duck - Breast,Sports,34958.81,1551
-Longos - Cheese Tortellini,Health,12027.05,3419
-Water - Spring Water 500ml,Garden,18294.34,129
-Petite Baguette,Garden,13384.14,3514
-Sachet,Clothing,798.37,2180
-Bagels Poppyseed,Movies,8975.49,3520
-Sugar - Splenda Sweetener,Jewelery,4622.53,201
-Lady Fingers,Health,19718.44,4132
-Bacardi Mojito,Outdoors,16274.63,4942
-Cinnamon - Stick,Shoes,11529.76,1927
-Wine - Saint - Bris 2002 Sauv,Outdoors,24907.89,3047
-Towel Multifold,Movies,21572.72,187
-Beans - Fava Canned,Electronics,35191.24,911
-Sprite Diet - 355ml,Home,23513.13,436
-Cherries - Fresh,Computers,38289.97,817
-Soup - Base Broth Chix,Jewelery,7963.63,1812
-Garlic Powder,Computers,563.84,449
-Jam - Apricot,Baby,38959.43,3277
-Wine - Cahors Ac 2000 Clos,Grocery,8187.0,4918
-Seedlings - Mix Organic,Tools,33963.99,263
-Cumin - Whole,Grocery,13372.44,4465
-Beer - Mcauslan Apricot,Baby,15587.23,530
-Puff Pastry - Slab,Kids,27414.06,1320
-Muffin Batt - Choc Chk,Movies,35234.05,1573
-Cheese - Gouda Smoked,Automotive,160.18,3360
-Spaghetti Squash,Outdoors,17687.75,6
-Lemonade - Pineapple Passion,Toys,8191.71,3873
-Bulgar,Industrial,5926.59,4198
-Lamb Rack Frenched Australian,Kids,17523.71,4369
-Tea - Herbal I Love Lemon,Shoes,36168.68,413
-Mustard - Dijon,Games,6116.51,28
-Lamb - Bones,Tools,26854.73,333
-Jello - Assorted,Books,13854.37,1990
-Lettuce - Arugula,Kids,14808.46,3017
-Wine - Marlbourough Sauv Blanc,Kids,19468.9,3043
-Ecolab - Power Fusion,Computers,14453.47,84
-Hummus - Spread,Industrial,32186.71,947
-Blackberries,Shoes,1969.96,1073
+productName;category;price;warehouseQuantity
+Alma;Élelmiszer;70;500
+Banán;Élelmiszer;100;200
+Milka;Élelmiszer;400;70
+Pálma;Dísznövény;3500;15
+Orchidea;Dísznövény;4500;21
+Só;Élelmiszer;200;85
+Zsemle;Élelmiszer;35;175
+Laptop;Elektronika;245000;6
+Televízió;Elektronika;150000;4
+Narancslé;Ital;370;64
+Pezsgő;Ital;890;45
+Bor;Ital;1500;38
+Mandarin;Élelmiszer;60;730
+Torta;Élelmiszer;4500;13
+Fülhallgató;Elektronika;25000;18
+Nadrág;Ruha;5500;57
+Póló;Ruha;3490;75
+Pulóver;Ruha;7490;43
+Kabát;Ruha;15000;12
+Párna;Lakberendezés;7690;31
+Takaró;Lakberendezés;8300;35
+Lepedő;Lakberendezés;3000;27
+Cipő;Ruha;20000;19
+Nyaklánc;Ékszer;34000;3
+Fülbevaló;Ékszer;24000;5
+Gyűrű;Ékszer;40000;6
+Képkeret;Lakberendezés;750;25
+Tablet;Elektronika;140000;4
+Pohárkészlet;Lakberendezés;4990;21
+Tej;Élelmiszer;210;230
+Hagyma;Élelmiszer;120;64
+Sapka;Ruha;2990;32
+Sál;Ruha;3490;28
+Ceruza;Papírírószer;450;31
+Toll;Papírírószer;1200;23
+Tusfürdő;Tisztálkodószer;600;79
+Fogkrém;Tisztálkodószer;890;47
+Sampon;Tisztálkodószer;590;58
+Bőrradír;Tisztálkodószer;1150;37
+Mosogatószer;Tisztítószer;980;28
+Mosópor;Tisztítószer;1860;24
+Füzet;Papírírószer;350;26
+Társas;Játék;9850;7
+Kártya;Játék;3000;8
+Tolltartó;Papírírószer;2500;21
+Szék;Lakberendezés;25000;24
+Asztal;Lakberendezés;35000;14
+Fotel;Lakberendezés;50000;6
+Függöny;Lakberendezés;3600;12
+Lámpa;Lakberendezés;8300;4
+Hajgumi;Kiegészítő;1100;30
+Táska;Kiegészítő;7990;11
+Rúzs;Smink;2300;15
+Szempillaspirál;Smink;3150;22
+Pirosító;Smink;2250;14
+Cola;Élelmiszer;450;86
+Kávé;Élelmiszer;840;55
+Napszemüveg;Kiegészítő;3790;1
+Ásványvíz;Élelmiszer;120;230
+Sör;Élelmiszer;290;188
+Malibu;Élelmiszer;4700;25

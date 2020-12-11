@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class FileIO {
     
     private String line = "";
-    private final String cvsSplitBy = ",";
+    private final String cvsSplitBy = ";";
     private final String txtSplit = "\t";
 
     /**
@@ -31,7 +31,7 @@ public class FileIO {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
 
             while ((line = br.readLine()) != null) {
-                if(line.equals("productName,category,price,warehouseQuantity")) {
+                if(line.equals("productName;category;price;warehouseQuantity")) {
                     continue;
                 }
 
